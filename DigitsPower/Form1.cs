@@ -40,11 +40,9 @@ namespace DigitsPower
         public MainForm()
         {
             InitializeComponent();
-            //UpdateDirectoryList();
             CreateDirectories();
             Axis1Box.SelectedIndex = 0;
             Axis2Box.SelectedIndex = 1;
-            //radioButton1.Checked = true;
             tabControl1.SelectedIndex = 2;
         }
         
@@ -97,7 +95,6 @@ namespace DigitsPower
 
             try
             {
-                //Directory.CreateDirectory(path + "//" + DateTime.Now.ToLocalTime().ToString().Replace(':', '-'));
                 Directory.CreateDirectory(path + "\\Foundations");
                 Directory.CreateDirectory(path + "\\Degrees");
                 Directory.CreateDirectory(path + "\\Mods");
@@ -161,14 +158,6 @@ namespace DigitsPower
                     ModsDir.Items.Add(dirs2[dirs2.Length - 1]);
                 }
                 dirs = Directory.GetDirectories(path + "\\Results");
-                //ResultList.Items.Clear();
-                //ResultList.Items.Clear();
-                //foreach (string s in dirs)
-                //{
-                //    string[] dirs2 = s.Split('\\');
-                //    ResultList.Items.Add(dirs2[dirs2.Length - 1]);
-                //    ResultList.Items.Add(dirs2[dirs2.Length - 1]);
-                //}
             }
             catch (Exception)
             {
@@ -287,12 +276,6 @@ namespace DigitsPower
             }
             string path = Directory.GetCurrentDirectory();
             string[] dirs = Directory.GetDirectories(path + "\\Results");
-            //ResultList.Items.Clear();
-            //foreach (string s in dirs)
-            //{
-            //    string[] dirs2 = s.Split('\\');
-            //    ResultList.Items.Add(dirs2[dirs2.Length - 1]);
-            //}
             var result = MessageBox.Show("All done", "Result",
                                  MessageBoxButtons.OK,
                                  MessageBoxIcon.Information);
@@ -363,18 +346,6 @@ namespace DigitsPower
         {
             //textBox3.Text = ModsDir.SelectedItem.ToString();
         }
-
-        //private void ResultList_DoubleClick(object sender, EventArgs e)
-        //{
-        //    var x = Directory.GetCurrentDirectory();
-        //    var p = x + @"\bin\Debug\Results";
-        //    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo()
-        //    {
-        //        FileName = p,
-        //        UseShellExecute = true,
-        //        Verb = "open"
-        //    });
-        //}
 
         private void ModsDir_DoubleClick(object sender, EventArgs e)
         {

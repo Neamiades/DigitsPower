@@ -84,6 +84,7 @@
             this.ModLenght = new System.Windows.Forms.TextBox();
             this.ModCount = new System.Windows.Forms.TextBox();
             this.FilePow = new System.Windows.Forms.TabPage();
+            this.label24 = new System.Windows.Forms.Label();
             this.groupBox12 = new System.Windows.Forms.GroupBox();
             this.label15 = new System.Windows.Forms.Label();
             this.groupBox14 = new System.Windows.Forms.GroupBox();
@@ -113,7 +114,6 @@
             this.DegreeDir = new System.Windows.Forms.ListBox();
             this.ModsDir = new System.Windows.Forms.ListBox();
             this.FoundDir = new System.Windows.Forms.ListBox();
-            this.label24 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -714,6 +714,15 @@
             this.FilePow.UseVisualStyleBackColor = true;
             this.FilePow.Click += new System.EventHandler(this.FilePow_Click);
             // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(681, 208);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(116, 13);
+            this.label24.TabIndex = 33;
+            this.label24.Text = "(Results in miliseconds)";
+            // 
             // groupBox12
             // 
             this.groupBox12.Controls.Add(this.label15);
@@ -741,7 +750,7 @@
             this.groupBox14.Controls.Add(this.textBox4);
             this.groupBox14.Controls.Add(this.label29);
             this.groupBox14.Controls.Add(this.textBox5);
-            this.groupBox14.Location = new System.Drawing.Point(78, 93);
+            this.groupBox14.Location = new System.Drawing.Point(78, 74);
             this.groupBox14.Name = "groupBox14";
             this.groupBox14.Size = new System.Drawing.Size(158, 76);
             this.groupBox14.TabIndex = 33;
@@ -1036,15 +1045,6 @@
             this.FoundDir.Size = new System.Drawing.Size(267, 212);
             this.FoundDir.TabIndex = 5;
             this.FoundDir.SelectedValueChanged += new System.EventHandler(this.FoundDir_SelectedValueChanged);
-            // 
-            // label24
-            // 
-            this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(681, 208);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(116, 13);
-            this.label24.TabIndex = 33;
-            this.label24.Text = "(Results in miliseconds)";
             // 
             // MainForm
             // 

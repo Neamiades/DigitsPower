@@ -9,10 +9,11 @@ namespace DigitsPower
     class methods
     {
 
-        public static BigInteger Point_Multiplication_Affine_Coord_19(BigInteger found, BigInteger pow, BigInteger mod)
+        public static BigInteger Point_Multiplication_Affine_Coord_19(BigInteger found, BigInteger pow, BigInteger mod, bool convert_method)
         {
             BigInteger[,] mas_k;
-            mas_k = Convert_to_DBNS_1(pow, AdditionalParameters.A, AdditionalParameters.B);
+            mas_k = convert_method ? Convert_to_DBNS_1(pow, AdditionalParameters.A, AdditionalParameters.B)
+                                   : Convert_to_DBNS_2(pow, AdditionalParameters.A, AdditionalParameters.B);
 
             Int64 lastindex = mas_k.GetLength(0) - 1;
             BigInteger t = found;
@@ -48,14 +49,15 @@ namespace DigitsPower
             return res;
         }
 
-        public static BigInteger Point_Multiplication_Affine_Coord_20(BigInteger found, BigInteger pow, BigInteger mod)
+        public static BigInteger Point_Multiplication_Affine_Coord_20(BigInteger found, BigInteger pow, BigInteger mod, bool convert_method)
         {
             BigInteger[,] mas_k;
 
             BigInteger t = found;
             BigInteger res = 1;
 
-            mas_k = Convert_to_DBNS_2(pow, AdditionalParameters.A, AdditionalParameters.B);
+            mas_k = convert_method ? Convert_to_DBNS_1(pow, AdditionalParameters.A, AdditionalParameters.B)
+                                   : Convert_to_DBNS_2(pow, AdditionalParameters.A, AdditionalParameters.B);
 
             if (mas_k[0, 0] == -1)
                 res = AdditionalParameters.inv(mod, t);

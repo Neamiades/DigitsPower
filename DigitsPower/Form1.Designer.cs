@@ -61,21 +61,26 @@
             this.DegreesList = new System.Windows.Forms.ListBox();
             this.FoundationsList = new System.Windows.Forms.ListBox();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.label14 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.comboBox3 = new System.Windows.Forms.ComboBox();
+            this.label26 = new System.Windows.Forms.Label();
             this.GenDegree = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.DegreeLenght = new System.Windows.Forms.TextBox();
             this.DegreeCount = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.comboBox2 = new System.Windows.Forms.ComboBox();
+            this.label25 = new System.Windows.Forms.Label();
             this.GenFound = new System.Windows.Forms.Button();
             this.label8 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.FoundLenght = new System.Windows.Forms.TextBox();
             this.FoundCount = new System.Windows.Forms.TextBox();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.comboBox4 = new System.Windows.Forms.ComboBox();
+            this.label32 = new System.Windows.Forms.Label();
             this.ModType = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.GenMod = new System.Windows.Forms.Button();
@@ -206,10 +211,12 @@
             "16.Add Sub LR",
             "17.",
             "18.",
-            "19.DBNS 1 RL",
-            "20.DBNS 1 LR  (only for prime mod)",
-            "21.",
-            "22."});
+            "19.1 DBNS 1.1 RL",
+            "19.2 DBNS 1.2 RL",
+            "20.1 DBNS 1.1 LR  (only for prime mod)",
+            "20.2 DBNS 1.2 LR  (only for prime mod)",
+            "21.DBNS 2 RL",
+            "22.DBNS 2 LR"});
             this.OperationsList.Location = new System.Drawing.Point(5, 19);
             this.OperationsList.Name = "OperationsList";
             this.OperationsList.Size = new System.Drawing.Size(399, 184);
@@ -316,7 +323,7 @@
             this.tabControl1.Controls.Add(this.Pow);
             this.tabControl1.Controls.Add(this.FileCreate);
             this.tabControl1.Controls.Add(this.FilePow);
-            this.tabControl1.Location = new System.Drawing.Point(7, 6);
+            this.tabControl1.Location = new System.Drawing.Point(12, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(940, 542);
@@ -466,27 +473,16 @@
             // 
             // groupBox6
             // 
-            this.groupBox6.Controls.Add(this.label14);
             this.groupBox6.Controls.Add(this.label16);
             this.groupBox6.Controls.Add(this.groupBox5);
             this.groupBox6.Controls.Add(this.groupBox2);
             this.groupBox6.Controls.Add(this.groupBox8);
             this.groupBox6.Location = new System.Drawing.Point(6, 6);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(918, 284);
+            this.groupBox6.Size = new System.Drawing.Size(918, 292);
             this.groupBox6.TabIndex = 13;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Generate new file";
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label14.Location = new System.Drawing.Point(380, 84);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(144, 18);
-            this.label14.TabIndex = 22;
-            this.label14.Text = "(Lenght in bytes)";
             // 
             // label16
             // 
@@ -500,23 +496,46 @@
             // 
             // groupBox5
             // 
+            this.groupBox5.Controls.Add(this.comboBox3);
+            this.groupBox5.Controls.Add(this.label26);
             this.groupBox5.Controls.Add(this.GenDegree);
             this.groupBox5.Controls.Add(this.label4);
             this.groupBox5.Controls.Add(this.label11);
             this.groupBox5.Controls.Add(this.DegreeLenght);
             this.groupBox5.Controls.Add(this.DegreeCount);
-            this.groupBox5.Location = new System.Drawing.Point(6, 148);
+            this.groupBox5.Location = new System.Drawing.Point(6, 155);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(307, 112);
+            this.groupBox5.Size = new System.Drawing.Size(307, 129);
             this.groupBox5.TabIndex = 12;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Degree parametrs";
             // 
+            // comboBox3
+            // 
+            this.comboBox3.FormattingEnabled = true;
+            this.comboBox3.Items.AddRange(new object[] {
+            "Bites",
+            "Bytes"});
+            this.comboBox3.Location = new System.Drawing.Point(71, 72);
+            this.comboBox3.Name = "comboBox3";
+            this.comboBox3.Size = new System.Drawing.Size(223, 21);
+            this.comboBox3.TabIndex = 10;
+            this.comboBox3.Text = "Bytes";
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(6, 75);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(54, 13);
+            this.label26.TabIndex = 9;
+            this.label26.Text = "Lenght in:";
+            // 
             // GenDegree
             // 
-            this.GenDegree.Location = new System.Drawing.Point(123, 72);
+            this.GenDegree.Location = new System.Drawing.Point(113, 104);
             this.GenDegree.Name = "GenDegree";
-            this.GenDegree.Size = new System.Drawing.Size(67, 29);
+            this.GenDegree.Size = new System.Drawing.Size(67, 19);
             this.GenDegree.TabIndex = 4;
             this.GenDegree.Text = "Generate";
             this.GenDegree.UseVisualStyleBackColor = true;
@@ -525,7 +544,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(11, 23);
+            this.label4.Location = new System.Drawing.Point(16, 23);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(38, 13);
             this.label4.TabIndex = 0;
@@ -534,7 +553,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(6, 49);
+            this.label11.Location = new System.Drawing.Point(17, 49);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(43, 13);
             this.label11.TabIndex = 1;
@@ -558,6 +577,8 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.comboBox2);
+            this.groupBox2.Controls.Add(this.label25);
             this.groupBox2.Controls.Add(this.GenFound);
             this.groupBox2.Controls.Add(this.label8);
             this.groupBox2.Controls.Add(this.label10);
@@ -565,16 +586,37 @@
             this.groupBox2.Controls.Add(this.FoundCount);
             this.groupBox2.Location = new System.Drawing.Point(6, 19);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(307, 112);
+            this.groupBox2.Size = new System.Drawing.Size(307, 132);
             this.groupBox2.TabIndex = 11;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Foundation parametrs";
             // 
+            // comboBox2
+            // 
+            this.comboBox2.FormattingEnabled = true;
+            this.comboBox2.Items.AddRange(new object[] {
+            "Bites",
+            "Bytes"});
+            this.comboBox2.Location = new System.Drawing.Point(71, 75);
+            this.comboBox2.Name = "comboBox2";
+            this.comboBox2.Size = new System.Drawing.Size(223, 21);
+            this.comboBox2.TabIndex = 8;
+            this.comboBox2.Text = "Bytes";
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(6, 78);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(54, 13);
+            this.label25.TabIndex = 5;
+            this.label25.Text = "Lenght in:";
+            // 
             // GenFound
             // 
-            this.GenFound.Location = new System.Drawing.Point(123, 72);
+            this.GenFound.Location = new System.Drawing.Point(113, 104);
             this.GenFound.Name = "GenFound";
-            this.GenFound.Size = new System.Drawing.Size(67, 29);
+            this.GenFound.Size = new System.Drawing.Size(67, 22);
             this.GenFound.TabIndex = 4;
             this.GenFound.Text = "Generate";
             this.GenFound.UseVisualStyleBackColor = true;
@@ -583,7 +625,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(11, 23);
+            this.label8.Location = new System.Drawing.Point(16, 23);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(38, 13);
             this.label8.TabIndex = 0;
@@ -592,7 +634,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(6, 49);
+            this.label10.Location = new System.Drawing.Point(11, 49);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(43, 13);
             this.label10.TabIndex = 1;
@@ -616,6 +658,8 @@
             // 
             // groupBox8
             // 
+            this.groupBox8.Controls.Add(this.comboBox4);
+            this.groupBox8.Controls.Add(this.label32);
             this.groupBox8.Controls.Add(this.ModType);
             this.groupBox8.Controls.Add(this.label3);
             this.groupBox8.Controls.Add(this.GenMod);
@@ -625,10 +669,31 @@
             this.groupBox8.Controls.Add(this.ModCount);
             this.groupBox8.Location = new System.Drawing.Point(594, 70);
             this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Size = new System.Drawing.Size(307, 140);
+            this.groupBox8.Size = new System.Drawing.Size(307, 158);
             this.groupBox8.TabIndex = 10;
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "Mod parametrs";
+            // 
+            // comboBox4
+            // 
+            this.comboBox4.FormattingEnabled = true;
+            this.comboBox4.Items.AddRange(new object[] {
+            "Bites",
+            "Bytes"});
+            this.comboBox4.Location = new System.Drawing.Point(71, 100);
+            this.comboBox4.Name = "comboBox4";
+            this.comboBox4.Size = new System.Drawing.Size(223, 21);
+            this.comboBox4.TabIndex = 10;
+            this.comboBox4.Text = "Bytes";
+            // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Location = new System.Drawing.Point(6, 103);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(54, 13);
+            this.label32.TabIndex = 9;
+            this.label32.Text = "Lenght in:";
             // 
             // ModType
             // 
@@ -647,7 +712,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(11, 75);
+            this.label3.Location = new System.Drawing.Point(25, 75);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(34, 13);
             this.label3.TabIndex = 5;
@@ -655,9 +720,9 @@
             // 
             // GenMod
             // 
-            this.GenMod.Location = new System.Drawing.Point(123, 105);
+            this.GenMod.Location = new System.Drawing.Point(123, 127);
             this.GenMod.Name = "GenMod";
-            this.GenMod.Size = new System.Drawing.Size(67, 29);
+            this.GenMod.Size = new System.Drawing.Size(67, 22);
             this.GenMod.TabIndex = 4;
             this.GenMod.Text = "Generate";
             this.GenMod.UseVisualStyleBackColor = true;
@@ -666,7 +731,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(11, 23);
+            this.label1.Location = new System.Drawing.Point(21, 23);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(38, 13);
             this.label1.TabIndex = 0;
@@ -675,7 +740,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 49);
+            this.label2.Location = new System.Drawing.Point(17, 49);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(43, 13);
             this.label2.TabIndex = 1;
@@ -738,11 +803,11 @@
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(23, 33);
+            this.label15.Location = new System.Drawing.Point(10, 36);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(32, 13);
+            this.label15.Size = new System.Drawing.Size(62, 13);
             this.label15.TabIndex = 36;
-            this.label15.Text = "Axis :";
+            this.label15.Text = "Axis (Files) :";
             // 
             // groupBox14
             // 
@@ -750,7 +815,7 @@
             this.groupBox14.Controls.Add(this.textBox4);
             this.groupBox14.Controls.Add(this.label29);
             this.groupBox14.Controls.Add(this.textBox5);
-            this.groupBox14.Location = new System.Drawing.Point(78, 74);
+            this.groupBox14.Location = new System.Drawing.Point(78, 93);
             this.groupBox14.Name = "groupBox14";
             this.groupBox14.Size = new System.Drawing.Size(158, 76);
             this.groupBox14.TabIndex = 33;
@@ -762,9 +827,9 @@
             this.label28.AutoSize = true;
             this.label28.Location = new System.Drawing.Point(16, 21);
             this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(20, 13);
+            this.label28.Size = new System.Drawing.Size(44, 13);
             this.label28.TabIndex = 18;
-            this.label28.Text = "A :";
+            this.label28.Text = "a_max :";
             // 
             // textBox4
             // 
@@ -779,9 +844,9 @@
             this.label29.AutoSize = true;
             this.label29.Location = new System.Drawing.Point(16, 45);
             this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(20, 13);
+            this.label29.Size = new System.Drawing.Size(44, 13);
             this.label29.TabIndex = 16;
-            this.label29.Text = "B :";
+            this.label29.Text = "b_max :";
             // 
             // textBox5
             // 
@@ -845,7 +910,7 @@
             this.WinMode.Name = "WinMode";
             this.WinMode.Size = new System.Drawing.Size(202, 20);
             this.WinMode.TabIndex = 24;
-            this.WinMode.Text = "2-24-3";
+            this.WinMode.Text = "2-8-2;3-12-3";
             // 
             // Axis2Box
             // 
@@ -967,10 +1032,12 @@
             "16.Add Sub LR",
             "17.",
             "18.",
-            "19.DBNS 1 RL",
-            "20.DBNS 1 LR  (only for prime mod)",
-            "21.",
-            "22."});
+            "19.1 DBNS 1.1 RL",
+            "19.2 DBNS 1.2 RL",
+            "20.1 DBNS 1.1 LR  (only for prime mod)",
+            "20.2 DBNS 1.2 LR  (only for prime mod)",
+            "21.DBNS 2 RL",
+            "22.DBNS 2 LR"});
             this.OperCheckList.Location = new System.Drawing.Point(6, 17);
             this.OperCheckList.Name = "OperCheckList";
             this.OperCheckList.Size = new System.Drawing.Size(235, 124);
@@ -1155,7 +1222,6 @@
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.Label label17;
-        private System.Windows.Forms.Label label14;
         private System.Windows.Forms.GroupBox groupBox11;
         private System.Windows.Forms.Label label23;
         private System.Windows.Forms.Label label13;
@@ -1175,6 +1241,12 @@
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.ComboBox comboBox3;
+        private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.ComboBox comboBox2;
+        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.ComboBox comboBox4;
+        private System.Windows.Forms.Label label32;
     }
 }
 

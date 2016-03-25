@@ -39,7 +39,7 @@ namespace DigitsPower
                     
                     for (int m_len = 0; m_len < three.Length; m_len++)
                     {
-                        sw.Write(three_i[m_len] + ";");
+                        sw.Write(three_i[m_len] + "(ms)" + ";");
                     }
                     sw.WriteLine();
                     for (int d_len = 0; d_len < two.Length; d_len++)
@@ -60,21 +60,16 @@ namespace DigitsPower
         public void Create_Result(string Found, string Degree, string Mod, string by)
         {
             string path = Directory.GetCurrentDirectory();
-            //FileStream fin;
             string[] founds = Directory.GetFiles(path + "\\Foundations\\" + Found);
             string[] degrees = Directory.GetFiles(path + "\\Degrees\\" + Degree);
             string[] mods = Directory.GetFiles(path + "\\Mods\\" + Mod);
-
-            //int[] founds_i = MakeDigits(founds);
-            //int[] degrees_i = MakeDigits(degrees);
-            //int[] mods_i = MakeDigits(mods);
+            
 
             DirectoryInfo di;
             switch (by)
             {
                 case "Foundations":
-                   di = Directory.CreateDirectory(String.Format("{0}\\{1}\\{2}_{3}_{4}+_{5}#{6}",
-                path, "Results", Name(), Mod.Split('#')[0], Found.Split('#')[0], Degree.Split('#')[0], DateTime.Now.ToLocalTime().ToString().Replace(':', '-')));
+                   di = Directory.CreateDirectory($"{path}\\Results\\{Name()}_{Mod.Split('#')[0]}_{Found.Split('#')[0]}+_{Degree.Split('#')[0]}#{DateTime.Now.ToLocalTime().ToString().Replace(':', '-')}");
                     Gen(founds, degrees, mods, path, di.FullName, "Foundations\\" + Found, "Degrees\\" + Degree, "Mods\\" + Mod);
                     break;
                 case "Degrees":
@@ -184,28 +179,50 @@ namespace DigitsPower
         protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod) { PowFunctions.AddSubLR(found, pow, mod); }
         //public override void Result(ListBox l) { l.Items.Add("AddSubLR done"); base.Result(l); }
     }
-    //class DBNS2RL : BinaryPow
-    //{
-    //    public override string Name() { return "DBNS2RL"; }
-    //    protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod) { PowFunctions.DBNS2RL(found, pow, mod); }
-    //    //public override void Result(ListBox l) { l.Items.Add("DBNS2RL done"); base.Result(l); }
-    //}
-    //class DBNS2LR : BinaryPow
-    //{
-    //    public override string Name() { return "DBNS2LR"; }
-    //    protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod) { PowFunctions.DBNS2LR(found, pow, mod); }
-    //    //public override void Result(ListBox l) { l.Items.Add("DBNS2LR done"); base.Result(l); }
-    //}
+    class DBNS2RL : BinaryPow
+    {
+        public override string Name() { return "DBNS2RL"; }
+        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod) { PowFunctions.DBNS2RL(found, pow, mod,PowFunctions.Euclid_2_1); }
+        //public override void Result(ListBox l) { l.Items.Add("DBNS2RL done"); base.Result(l); }
+    }
+    class DBNS2LR : BinaryPow
+    {
+        public override string Name() { return "DBNS2LR"; }
+        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod) { PowFunctions.DBNS2LR(found, pow, mod, PowFunctions.Euclid_2_1); }
+        //public override void Result(ListBox l) { l.Items.Add("DBNS2LR done"); base.Result(l); }
+    }
     class DBNS1RL : BinaryPow
     {
+        bool convert_method;
+
+        public DBNS1RL() : base()
+        {
+            convert_method = true;
+        }
+
+        public DBNS1RL(bool choice)
+        {
+            convert_method = choice;
+        }
         public override string Name() { return "DBNS1RL"; }
-        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod) { PowFunctions.DBNS1RL(found, pow, mod); }
+        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod) { PowFunctions.DBNS1RL(found, pow, mod, convert_method); }
         //public override void Result(ListBox l) { l.Items.Add("DBNS2RL done"); base.Result(l); }
     }
     class DBNS1LR : BinaryPow
     {
+        bool convert_method;
+
+        public DBNS1LR() : base()
+        {
+            convert_method = true;
+        }
+
+        public DBNS1LR(bool choice)
+        {
+            convert_method = choice;
+        }
         public override string Name() { return "DBNS1LR"; }
-        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod) { PowFunctions.DBNS1LR(found, pow, mod); }
+        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod) { PowFunctions.DBNS1LR(found, pow, mod, convert_method); }
         //public override void Result(ListBox l) { l.Items.Add("DBNS2LR done"); base.Result(l); }
     }
     #endregion
@@ -414,7 +431,6 @@ namespace DigitsPower
             for (int w_len = 0; w_len < w_i.Count; w_len++)
             {
                 w_di = Directory.CreateDirectory(di + "\\" + w_i[w_len]);
-                //w_gen = GenFunctions.random_max_int(w_i[w_len]);
                 double table_time;
                 if (Table)
                 {

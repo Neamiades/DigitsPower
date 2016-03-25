@@ -40,9 +40,11 @@ namespace DigitsPower
         public MainForm()
         {
             InitializeComponent();
+            //UpdateDirectoryList();
             CreateDirectories();
             Axis1Box.SelectedIndex = 0;
             Axis2Box.SelectedIndex = 1;
+            //radioButton1.Checked = true;
             tabControl1.SelectedIndex = 2;
         }
         
@@ -84,8 +86,13 @@ namespace DigitsPower
 
 
 
-                    if (OperationsList.CheckedIndices[i] == 18) { OperationsResult.Items.Add("DBNS1RL\t: " + (PowFunctions.DBNS1RL(num, pow, mod).ToString())); OperationsResult.Update(); }
-                    if (OperationsList.CheckedIndices[i] == 19) { OperationsResult.Items.Add("DBNS1LR\t: " + (PowFunctions.DBNS1LR(num, pow, mod).ToString())); OperationsResult.Update(); }
+                    if (OperationsList.CheckedIndices[i] == 18) { OperationsResult.Items.Add("DBNS1RL 1\t: " + (PowFunctions.DBNS1RL(num, pow, mod,true).ToString())); OperationsResult.Update(); }
+                    if (OperationsList.CheckedIndices[i] == 19) { OperationsResult.Items.Add("DBNS1RL 2\t: " + (PowFunctions.DBNS1RL(num, pow, mod,false).ToString())); OperationsResult.Update(); }
+                    if (OperationsList.CheckedIndices[i] == 20) { OperationsResult.Items.Add("DBNS1LR 1\t: " + (PowFunctions.DBNS1LR(num, pow, mod,true).ToString())); OperationsResult.Update(); }
+                    if (OperationsList.CheckedIndices[i] == 21) { OperationsResult.Items.Add("DBNS1LR 2\t: " + (PowFunctions.DBNS1LR(num, pow, mod,false).ToString())); OperationsResult.Update(); }
+
+                    if (OperationsList.CheckedIndices[i] == 22) { OperationsResult.Items.Add("DBNS2RL\t: " + (PowFunctions.DBNS2RL(num, pow, mod, PowFunctions.Euclid_2_1).ToString())); OperationsResult.Update(); }
+                    if (OperationsList.CheckedIndices[i] == 23) { OperationsResult.Items.Add("DBNS2LR\t: " + (PowFunctions.DBNS2LR(num, pow, mod, PowFunctions.Euclid_2_1).ToString())); OperationsResult.Update(); }
                 }
             }
         }
@@ -95,6 +102,7 @@ namespace DigitsPower
 
             try
             {
+                //Directory.CreateDirectory(path + "//" + DateTime.Now.ToLocalTime().ToString().Replace(':', '-'));
                 Directory.CreateDirectory(path + "\\Foundations");
                 Directory.CreateDirectory(path + "\\Degrees");
                 Directory.CreateDirectory(path + "\\Mods");
@@ -158,6 +166,14 @@ namespace DigitsPower
                     ModsDir.Items.Add(dirs2[dirs2.Length - 1]);
                 }
                 dirs = Directory.GetDirectories(path + "\\Results");
+                //ResultList.Items.Clear();
+                //ResultList.Items.Clear();
+                //foreach (string s in dirs)
+                //{
+                //    string[] dirs2 = s.Split('\\');
+                //    ResultList.Items.Add(dirs2[dirs2.Length - 1]);
+                //    ResultList.Items.Add(dirs2[dirs2.Length - 1]);
+                //}
             }
             catch (Exception)
             {
@@ -165,17 +181,17 @@ namespace DigitsPower
             }
         }
         
-        private void GenFile(GenFunctions.random_num func, string dir, string len, string count, string type = "")
+        private void GenFile(GenFunctions.random_num func, string dir, string len, string count, string type , string radix)
         {
             string path = Directory.GetCurrentDirectory();
-            var lengts = GenFunctions.ReadString(len);
+            var lenght = GenFunctions.ReadString(len);
             try
             {
-                var di = Directory.CreateDirectory(String.Format("{0}\\{1}\\{2}{3}_{4}_{5}#{6}", path, dir, type, lengts[0], lengts[lengts.Count - 1], count, DateTime.Now.ToLocalTime().ToString().Replace(':', '-')));
+                var di = Directory.CreateDirectory($"{path}\\{dir}\\{type}{lenght[0]}_{lenght[lenght.Count - 1]}_{count}({radix})#{DateTime.Now.ToLocalTime().ToString().Replace(':', '-')}");
                 FileStream fin;
-                for (int j = 0; j < lengts.Count; j++)
+                for (int j = 0; j < lenght.Count; j++)
                 {
-                    path = di.FullName + "\\" + lengts[j] + ".txt";
+                    path = di.FullName + "\\" + lenght[j] + ".txt";
 
                     fin = new FileStream(path, FileMode.Create, FileAccess.Write);
                     // Open the stream and read it back.
@@ -183,7 +199,7 @@ namespace DigitsPower
                     {
                         for (int i = 0; i < Int32.Parse(count); i++)
                         {
-                            sr.WriteLine(func(lengts[j]));
+                            sr.WriteLine(func(lenght[j], radix));
                         }
                     }
                     fin.Close();
@@ -197,12 +213,12 @@ namespace DigitsPower
         }
         private void GenFound_Click(object sender, EventArgs e)
         {
-            GenFile(GenFunctions.random_max, "Foundations", FoundLenght.Text,FoundCount.Text, "Found");
+            GenFile(GenFunctions.random_max, "Foundations", FoundLenght.Text,FoundCount.Text, "Found",comboBox2.Text);
         }
 
         private void GenDegree_Click(object sender, EventArgs e)
         {
-            GenFile(GenFunctions.random_max, "Degrees", DegreeLenght.Text, DegreeCount.Text, "Degree");
+            GenFile(GenFunctions.random_max, "Degrees", DegreeLenght.Text, DegreeCount.Text, "Degree", comboBox3.Text);
         }
 
         private void GenMod_Click(object sender, EventArgs e)
@@ -210,16 +226,16 @@ namespace DigitsPower
             switch (ModType.Text)
             {
                 case "Degree of 2":
-                    GenFile(GenFunctions.random_two, "Mods", ModLenght.Text, ModCount.Text, "Mod_Degree of 2_");
+                    GenFile(GenFunctions.random_two, "Mods", ModLenght.Text, ModCount.Text, "Mod_Degree of two_", comboBox4.Text);
                     break;
                 case "Odd number":
-                    GenFile(GenFunctions.random_odd, "Mods",ModLenght.Text,ModCount.Text, "Mod_Odd number_");
+                    GenFile(GenFunctions.random_odd, "Mods",ModLenght.Text,ModCount.Text, "Mod_Odd number_", comboBox4.Text);
                     break;
                 case "Prime number":
-                    GenFile(GenFunctions.random_simple, "Mods", ModLenght.Text, ModCount.Text, "Mod_Prime number_");
+                    GenFile(GenFunctions.random_simple, "Mods", ModLenght.Text, ModCount.Text, "Mod_Prime number_", comboBox4.Text);
                     break;
                 default:
-                    GenFile(GenFunctions.random_max, "Mods", ModLenght.Text, ModCount.Text, "Mod_Random number_");
+                    GenFile(GenFunctions.random_max, "Mods", ModLenght.Text, ModCount.Text, "Mod_Random number_", comboBox4.Text);
                     break;
             }
             
@@ -251,11 +267,17 @@ namespace DigitsPower
                     if (OperCheckList.CheckedIndices[i] == 15) { (new AddSubLR()).Create_Result(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choice); }
 
 
+                    //with To_DBNS_1
+                    if (OperCheckList.CheckedIndices[i] == 18) { (new DBNS1RL(true)).Create_Result(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choice); }
+                    //with To_DBNS_2
+                    if (OperCheckList.CheckedIndices[i] == 19) { (new DBNS1RL(false)).Create_Result(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choice); }
+                    //with To_DBNS_1
+                    if (OperCheckList.CheckedIndices[i] == 20) { (new DBNS1LR(true)).Create_Result(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choice); }
+                    //with To_DBNS_2
+                    if (OperCheckList.CheckedIndices[i] == 21) { (new DBNS1LR(false)).Create_Result(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choice); }
 
-                    if (OperCheckList.CheckedIndices[i] == 18) { (new DBNS1RL()).Create_Result(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choice); }
-                    if (OperCheckList.CheckedIndices[i] == 19) { (new DBNS1LR()).Create_Result(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choice); }
-                    if (OperCheckList.CheckedIndices[i] == 21) {  }
-                    if (OperCheckList.CheckedIndices[i] == 22) {  }
+                    if (OperCheckList.CheckedIndices[i] == 22) { (new DBNS2RL()).Create_Result(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choice); }
+                    if (OperCheckList.CheckedIndices[i] == 23) { (new DBNS2RL()).Create_Result(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choice); }
                     #endregion
 
                     #region Window
@@ -276,6 +298,12 @@ namespace DigitsPower
             }
             string path = Directory.GetCurrentDirectory();
             string[] dirs = Directory.GetDirectories(path + "\\Results");
+            //ResultList.Items.Clear();
+            //foreach (string s in dirs)
+            //{
+            //    string[] dirs2 = s.Split('\\');
+            //    ResultList.Items.Add(dirs2[dirs2.Length - 1]);
+            //}
             var result = MessageBox.Show("All done", "Result",
                                  MessageBoxButtons.OK,
                                  MessageBoxIcon.Information);
@@ -346,6 +374,18 @@ namespace DigitsPower
         {
             //textBox3.Text = ModsDir.SelectedItem.ToString();
         }
+
+        //private void ResultList_DoubleClick(object sender, EventArgs e)
+        //{
+        //    var x = Directory.GetCurrentDirectory();
+        //    var p = x + @"\bin\Debug\Results";
+        //    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo()
+        //    {
+        //        FileName = p,
+        //        UseShellExecute = true,
+        //        Verb = "open"
+        //    });
+        //}
 
         private void ModsDir_DoubleClick(object sender, EventArgs e)
         {

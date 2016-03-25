@@ -20,28 +20,8 @@ namespace DigitsPower
     }
     abstract class PowFunctions
     {
-        public static BigInteger TwoPow(BigInteger pow)
-        {
-            BigInteger result = 1;
-            for(BigInteger i = 0; i < pow; i++)
-            {
-                result = result << 1;
-            }
-            return result;
-        }
         #region binary
-        private static string ConvToBinary(BigInteger num)
-        {
-            string x = "";
-            while (num != 0)
-            {
-                x += num % 2;
-                num /= 2;
-            }
-            char[] charArray = x.ToCharArray();
-            Array.Reverse(charArray);
-            return new string(charArray);
-        }
+        
         public static BigInteger BinaryRL(BigInteger found, BigInteger pow, BigInteger mod)
         {
             BigInteger res = 1;
@@ -69,24 +49,7 @@ namespace DigitsPower
             }
             return res;
         }
-        private static MyList<BigInteger> ToNAF(BigInteger n)
-        {
-            
-            MyList<BigInteger> res = new MyList<BigInteger>();
-            BigInteger k = n;
-            while (k >= 1)
-            {
-                if (k % 2 != 0)
-                {
-                    res.Insert(0, 2 - k % 4);
-                    k = k - res[0];
-                }
-                else
-                    res.Insert(0, 0);
-                k = k / 2;
-            }
-            return res;
-        }
+        
         public static BigInteger Euclid_2_1(BigInteger mod, BigInteger found)
         {
             BigInteger u, v, A, B, C, D, y, t1, t2, t3, q, d, inv;
@@ -146,7 +109,6 @@ namespace DigitsPower
             }
             return res;
         }
-
 
         public static BigInteger AddSubRL(BigInteger found, BigInteger pow, BigInteger mod)
         {
@@ -227,13 +189,13 @@ namespace DigitsPower
             return res;
         }
 
-        public static BigInteger DBNS1RL(BigInteger found, BigInteger pow, BigInteger mod)
+        public static BigInteger DBNS1RL(BigInteger found, BigInteger pow, BigInteger mod, bool convert_method)
         {
-            return methods.Point_Multiplication_Affine_Coord_19(found, pow, mod);
+            return methods.Point_Multiplication_Affine_Coord_19(found, pow, mod, convert_method);
         }
-        public static BigInteger DBNS1LR(BigInteger found, BigInteger pow, BigInteger mod)
+        public static BigInteger DBNS1LR(BigInteger found, BigInteger pow, BigInteger mod, bool convert_method)
         {
-            return methods.Point_Multiplication_Affine_Coord_20(found, pow, mod);
+            return methods.Point_Multiplication_Affine_Coord_20(found, pow, mod, convert_method);
         }
 
         public static BigInteger DBNS2RL(BigInteger found, BigInteger pow, BigInteger mod, Inverse inv)
@@ -278,6 +240,47 @@ namespace DigitsPower
                 res = res * res % mod;
             for (int j = 0; j < x[0][2]; j++)
                 res = res * res * res % mod;
+            return res;
+        }
+
+        //helps methods
+        public static BigInteger TwoPow(BigInteger pow)
+        {
+            BigInteger result = 1;
+            for (BigInteger i = 0; i < pow; i++)
+            {
+                result = result << 1;
+            }
+            return result;
+        }
+        private static string ConvToBinary(BigInteger num)
+        {
+            string x = "";
+            while (num != 0)
+            {
+                x += num % 2;
+                num /= 2;
+            }
+            char[] charArray = x.ToCharArray();
+            Array.Reverse(charArray);
+            return new string(charArray);
+        }
+        private static MyList<BigInteger> ToNAF(BigInteger n)
+        {
+
+            MyList<BigInteger> res = new MyList<BigInteger>();
+            BigInteger k = n;
+            while (k >= 1)
+            {
+                if (k % 2 != 0)
+                {
+                    res.Insert(0, 2 - k % 4);
+                    k = k - res[0];
+                }
+                else
+                    res.Insert(0, 0);
+                k = k / 2;
+            }
             return res;
         }
         private static List<int[]> ToDBNS2RL(BigInteger pow)
@@ -861,76 +864,252 @@ namespace DigitsPower
             int x = r.Next(l, h);
             return x;
         }
-        public delegate BigInteger random_num(int n);
-        public static BigInteger random_max(int n)//n - length in bytes
-        {
-            var rng = new RNGCryptoServiceProvider();
-            byte[] bytes = new byte[n + 1];
-            rng.GetBytes(bytes);
-            bytes[n - 1] |= 0x80;
-            bytes[n] = 0;
-            //bytes[0] |= 1;
-            BigInteger b = new BigInteger(bytes);
-            
-            return b;
-        }
-        public static Int32 random_max_int(int n)//n - length in bytes
-        {
-            var rng = new RNGCryptoServiceProvider();
-            byte[] bytes = new byte[n + 1];
-            rng.GetBytes(bytes);
-            bytes[n - 1] |= 0x80;
-            bytes[n] = 0;
-            //bytes[0] |= 1;
-            Int32 b = new Int32();
-            BitConverter.ToInt32(bytes, b);
+        public delegate BigInteger random_num(int n, string type);
 
-            return b;
-        }
-        public static BigInteger random_two(int n)//n - length in bytes
+        public static BigInteger random_max(int n, string type = "Bytes")//n - length in bytes
         {
             var rng = new RNGCryptoServiceProvider();
             byte[] bytes = new byte[n + 1];
             rng.GetBytes(bytes);
-            bytes[n] = 1;
-            for (int i = 0; i < bytes.Length - 1; i++)
+            if (type == "Bytes")
             {
-                bytes[i] = 0;
+                bytes[n - 1] |= 0x80;//128
+                bytes[n] = 0;
+                return new BigInteger(bytes);
             }
-            BigInteger b = new BigInteger(bytes);
+            else
+            {
+                string s = "01";
+                for (int i = 0; i < n - 1; i++)
+                {
+                    s += bytes[i] % 2 == 0 ? '1' : '0';
+                }
+
+                return new BigInteger(Convert.ToInt32(s, 2));
+            }
+        }
+
+        public static BigInteger random_max_bites(int n)//n - length in bytes
+        {
+            string s = "";
+            var rand = new Random();
+            for (int i = 0; i < n + 1; i++)
+            {
+                s += rand.Next(2) == 1 ? '1' : '0';
+            }
+            
+            BigInteger b = new BigInteger(Convert.ToInt32(s, 2));
 
             return b;
         }
-        public static BigInteger random_simple(int n)//n - length in bytes
+ 
+        public static BigInteger random_two(int n, string type)//n - length in bytes
+        {
+            if (type == "Bytes")
+            {
+                var rng = new RNGCryptoServiceProvider();
+                byte[] bytes = new byte[n + 1];
+                bytes[n] = 1;
+                for (int i = 0; i < bytes.Length - 1; i++)
+                {
+                    bytes[i] = 0;
+                }
+
+                return new BigInteger(bytes);
+            }
+            else
+            {
+                string s = "";
+                s += '1';
+                for (int i = 1; i < n + 1; i++)
+                {
+                    s += '0';
+                }
+                return new BigInteger(Convert.ToInt32(s, 2));
+            }
+            
+        }
+        public static BigInteger random_simple(int n, string type)//n - length in bytes
         {
             BigInteger b;
             again:
-            b = random_odd(n);
-            if (Primality_Tests.Prime_Test_Miller_Rabin(b))
-                return b;
+            b = random_odd(n, type);
+            if (type == "Bytes")
+            {
+                if (b.IsProbablePrime())
+                    return b;
+            }
+            else
+            {
+                if (b.IsProbablePrime())
+                    //if (Primality_Tests.Ferma(b))
+                    return b;
+            } 
             goto again;
         }
-        public static BigInteger random_odd(int n)//n - length in bytes
+        public static BigInteger random_odd(int n, string type)//n - length in bytes
         {
             var rng = new RNGCryptoServiceProvider();
             byte[] bytes = new byte[n + 1];
             rng.GetBytes(bytes);
-            bytes[n - 1] |= 0x80;
-            bytes[n] = 0;
-            bytes[0] |= 1;
-            if (bytes[0] % 2 == 0)
+            if (type == "Bytes")
             {
-                bytes[0]++;
-            }
-            BigInteger b = new BigInteger(bytes);
+                bytes[n - 1] |= 0x80;
+                bytes[n] = 0;
+                bytes[0] |= 1;
+                if (bytes[0] % 2 == 0)
+                {
+                    bytes[0]++;
+                }
 
-            return b;
+                return new BigInteger(bytes);
+            }
+            else
+            {
+                char[] mas = new char[n + 1];
+                mas[n - 1] = '1';
+                mas[n] = '0';
+                mas[0] = '1';
+                for (int i = 1; i < n - 1; i++)
+                {
+                    mas[i] += bytes[i] % 2 == 0 ? '1' : '0';
+                }
+                Array.Reverse(mas);
+                return new BigInteger(Convert.ToInt32(new string(mas), 2));
+            }
+            
         }
     }
 
-    static class Primality_Tests
+    public static class BigIntegerExtensions
     {
-        public static bool Prime_Test_Miller_Rabin(BigInteger y)
+        //Тест Миллера-Рабина на простоту
+        public static bool IsProbablePrime(this BigInteger source, int certainty = 5)
+        {
+            if (source == 2 || source == 3)
+                return true;
+            if (source < 2 || source % 2 == 0)
+                return false;
+
+            BigInteger d = source - 1;
+            int s = 0;
+
+            while (d % 2 == 0)
+            {
+                d /= 2;
+                s += 1;
+            }
+
+            // There is no built-in method for generating random BigInteger values.
+            // Instead, random BigIntegers are constructed from randomly generated
+            // byte arrays of the same length as the source.
+            RandomNumberGenerator rng = RandomNumberGenerator.Create();
+            byte[] bytes = new byte[source.ToByteArray().LongLength];
+            BigInteger a;
+
+            for (int i = 0; i < certainty; i++)
+            {
+                do
+                {
+                    rng.GetBytes(bytes);
+                    a = new BigInteger(bytes);
+                }
+                while (a < 2 || a >= source - 2);
+
+                BigInteger x = BigInteger.ModPow(a, d, source);
+                if (x == 1 || x == source - 1)
+                    continue;
+
+                for (int r = 1; r < s; r++)
+                {
+                    x = BigInteger.ModPow(x, 2, source);
+                    if (x == 1)
+                        return false;
+                    if (x == source - 1)
+                        break;
+                }
+
+                if (x != source - 1)
+                    return false;
+            }
+
+            return true;
+        }
+
+        public static BigInteger Euclid_2_1(this BigInteger mod, BigInteger found)
+        {
+            BigInteger u, v, A, B, C, D, y, t1, t2, t3, q, d, inv;
+
+            u = mod;
+            v = found;
+
+            A = 1;
+            B = 0;
+            C = 0;
+            D = 1;
+
+            while (v != 0)
+            {
+                q = u / v;
+                t1 = u - q * v;
+                t2 = A - q * C;
+                t3 = B - q * D;
+
+                u = v;
+                A = C;
+                B = D;
+
+                v = t1;
+                C = t2;
+                D = t3;
+            }
+            d = u; y = B;
+
+            if (y >= 0) inv = y;
+            else inv = y + mod;
+            return inv;
+        }
+        private static MyList<BigInteger> ToNAF(this BigInteger n)
+        {
+
+            MyList<BigInteger> res = new MyList<BigInteger>();
+            BigInteger k = n;
+            while (k >= 1)
+            {
+                if (k % 2 != 0)
+                {
+                    res.Insert(0, 2 - k % 4);
+                    k = k - res[0];
+                }
+                else
+                    res.Insert(0, 0);
+                k = k / 2;
+            }
+            return res;
+        }
+        public static BigInteger TwoPow(this BigInteger pow)
+        {
+            BigInteger result = 1;
+            for (BigInteger i = 0; i < pow; i++)
+            {
+                result = result << 1;
+            }
+            return result;
+        }
+        private static string ConvToBinary(this BigInteger num)
+        {
+            string x = "";
+            while (num != 0)
+            {
+                x += num % 2;
+                num /= 2;
+            }
+            char[] charArray = x.ToCharArray();
+            Array.Reverse(charArray);
+            return new string(charArray);
+        }
+        //Тест Миллера-Рабина на простоту код студента
+        public static bool Prime_Test_Miller_Rabin(this BigInteger y)
         {
             BigInteger b = 0, T, a;
             bool flag = true;
@@ -970,6 +1149,47 @@ namespace DigitsPower
 
             return false;
         }
+
+        //public static bool Ferma(BigInteger x)
+        //{
+        //    if (x == 2)
+        //        return true;
+        //    BigInteger tmp = x - BigInteger.Parse("2");
+        //    //Random r = new Random(DateTime.Now.Millisecond);
+        //    for (int i = 0; i < 100; i++)
+        //    {
+        //        BigInteger a = GenFunctions.random_max(x - BigInteger.Parse("2")) + 2;
+        //        if (BigInteger.GreatestCommonDivisor(a, x) != 1)
+        //            return false;
+        //        if (pows(a, x - 1, x) != 1)
+        //            return false;
+        //    }
+        //    return true;
+        //}
+
+        //public static BigInteger mul(BigInteger a, BigInteger b, BigInteger m)
+        //{
+        //    if (b == 1)
+        //        return a;
+        //    if (b % 2 == 0)
+        //    {
+        //        BigInteger t = mul(a, b / 2, m);
+        //        return (2 * t) % m;
+        //    }
+        //    return (mul(a, b - 1, m) + a) % m;
+        //}
+
+        //public static BigInteger pows(BigInteger a, BigInteger b, BigInteger m)
+        //{
+        //    if (b == 0)
+        //        return 1;
+        //    if (b % 2 == 0)
+        //    {
+        //        BigInteger t = pows(a, b / 2, m);
+        //        return mul(t, t, m) % m;
+        //    }
+        //    return (mul(pows(a, b - 1, m), a, m)) % m;
+        //}
     }
-    
+
 }

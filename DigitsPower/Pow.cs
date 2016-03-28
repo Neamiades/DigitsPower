@@ -9,7 +9,7 @@ namespace DigitsPower
     public delegate BigInteger Inverse(BigInteger mod, BigInteger found);
     public delegate BigInteger Multiply(BigInteger a, BigInteger b);
 
-    class MyList<T> : List<T>
+    public class MyList<T> : List<T>
     {
         //public MyList() : base() { }
         public T this[BigInteger index]    // Indexer declaration
@@ -20,7 +20,7 @@ namespace DigitsPower
     }
     abstract class PowFunctions
     {
-        #region binary
+#region binary
         
         public static BigInteger BinaryRL(BigInteger found, BigInteger pow, BigInteger mod)
         {
@@ -205,12 +205,12 @@ namespace DigitsPower
             BigInteger res = 1;
             BigInteger t = found;
 
-            for (int i = x.Count - 1; i > -1; i--)
+            for (int i = 0; i < x.Count; i++)
             {
                 for (int j = 0; j < x[i][1]; j++)
-                    t = t * t % mod;
+                    t = (t * t) % mod;
                 for (int j = 0; j < x[i][2]; j++)
-                    t = t * t * t % mod;
+                    t = ((t * t) % mod * t) % mod;
 
                 if (x[i][0] == 1)
                     res = res * t % mod;
@@ -229,17 +229,17 @@ namespace DigitsPower
                 for (int j = 0; j < x[i][1]; j++)
                     res = res * res % mod;
                 for (int j = 0; j < x[i][2]; j++)
-                    res = res * res * res % mod;
+                    res = ((res * res) % mod * res) % mod;
 
                 if (x[i][0] == 1)
-                    res = res * found % mod;
+                    res = (res * found) % mod;
                 else if (x[i][0] == -1)
                     res = res * inv(found, mod) % mod;
             }
             for (int j = 0; j < x[0][1]; j++)
-                res = res * res % mod;
+                res = (res * res) % mod;
             for (int j = 0; j < x[0][2]; j++)
-                res = res * res * res % mod;
+                res = ((res * res) % mod * res) % mod;
             return res;
         }
 
@@ -287,9 +287,10 @@ namespace DigitsPower
         {
             List<int[]> x = new List<int[]>();
             BigInteger v = pow;
+            int i = 0;
             while (v != 0)
             {
-                x.Insert(0, new int[3]);
+                x.Insert(i, new int[3]);
                 int a = 0;
                 while (v % 2 == 0 && v != 0)
                 {
@@ -302,8 +303,8 @@ namespace DigitsPower
                     b++;
                     v /= 3;
                 }
-                x[0][1] = a;
-                x[0][2] = b;
+                x[i][1] = a;
+                x[i][2] = b;
 
                 v--;
                 if (v != 0)
@@ -311,13 +312,14 @@ namespace DigitsPower
                     if (v % 6 != 0)
                     {
                         v += 2;
-                        x[0][0] = -1;
+                        x[i][0] = -1;
                     }
                     else
-                        x[0][0] = 1;
+                        x[i][0] = 1;
                 }
                 else
-                    x[0][0] = 1;
+                    x[i][0] = 1;
+                i++;
             }
             return x;
         }
@@ -364,22 +366,7 @@ namespace DigitsPower
     
 
     #endregion
-    #region window
-
-    private static List<string> windows(string s, int w)
-        {
-            string st = s;
-
-            while (st.Length % w != 0)
-                st = "0" + st;
-
-            List<string> bins = new List<string>();
-            for (int i = 0; i < st.Length / w; i++)
-                bins.Add(st.Substring(i * w, w));
-
-            return bins;
-        }
-       
+#region window
         private static MyList<BigInteger> Table(BigInteger found, BigInteger pow, int w, BigInteger mod) //Из-за преобразований может работать медленней, 
         {
             var table = new MyList<BigInteger>();
@@ -435,6 +422,7 @@ namespace DigitsPower
             }
             return res;
         }
+
         public static BigInteger SlideRL(BigInteger found, BigInteger n, BigInteger mod, int w, out double table_time)
         {
             Stopwatch stw = new Stopwatch();
@@ -504,122 +492,96 @@ namespace DigitsPower
             }
             return res;
         }
-        private static MyList<BigInteger> FindLargest1(MyList<BigInteger> x, BigInteger i, int w)
-        {
-            BigInteger j = i;
-            BigInteger pow = 1;
-            BigInteger temp = pow * x[i];
-            BigInteger max_j = i;
-            BigInteger max = x[i];
-            while (j - i + 1 < w && j + 1 < x.Count)
-            {
-                j++;
-                pow = pow * 2;
-                temp = temp + pow * x[j];
-                if (temp % 2 != 0)
-                {
-                    max_j = j;
-                    max = temp;
-                }
-            }
-            max_j = max_j - i + 1;
-
-            MyList<BigInteger> r = new MyList<BigInteger>();
-            r.Add(max);
-            r.Add(max_j);
-            return r;
-        }
-        private static MyList<BigInteger> FindLargest2(MyList<BigInteger> x, BigInteger i, int w)
-        {
-            BigInteger j = i;
-            BigInteger pow = 1;
-            BigInteger temp = pow * x[i];
-            BigInteger max_j = i;
-            BigInteger max = x[i];
-            while (i - j + 1 < w && j > 1)
-            {
-                pow = 1;
-                temp = 0;
-                j--;
-                for (BigInteger t = j; t <= i; t++)
-                {
-                    temp = temp + pow * x[t];
-                    pow = pow * 2;
-                }
-
-                if (temp % 2 != 0)
-                {
-                    max_j = j;
-                    max = temp;
-                }
-            }
-            max_j = max_j - i + 1;
-
-            MyList<BigInteger> r = new MyList<BigInteger>();
-            r.Add(max);
-            r.Add(max_j);
-            return r;
-        }
+        
         public static BigInteger NAFSlideRL(BigInteger found, BigInteger n, BigInteger mod, int w, out double table_time)
         {
             BigInteger res = 1;
-            MyList<BigInteger> x = ToNAF(n);
+            MyList<BigInteger> x = n.ToNAF();
+
             Stopwatch stw = new Stopwatch();
             stw.Start();
-            
-            MyList<BigInteger> table = new MyList<BigInteger>();
-            BigInteger pow = 2 * ((BigInteger)Math.Pow(2, w) - (BigInteger)Math.Pow((-1), w)) / 3 - 1;
-            for (BigInteger i = 1; i <= pow; i += 2)
-                table.Add(BinaryRL(found, i, mod));
+
+            BigInteger pow = 2 * ((int)Math.Pow(2, w) - (int)Math.Pow((-1), w)) / 3 - 1;
+            MyList<BigInteger> table = NAFRLTable(found, mod, pow, w);
 
             stw.Stop();
-
             table_time = (double)(stw.ElapsedTicks / 10);
-            for (BigInteger i = x.Count - 1; i > -1; )
+
+            for (int i = 0; i < x.Count;)
             {
-                MyList<BigInteger> max = new MyList<BigInteger>();
-                if (x[i] == 0)
-                {
-                    max.Add(0);
-                    max.Add(1);
-                }
-                else
-                    max = FindLargest1(x, i, w);
+                List<BigInteger> max = FindLargest1(x, i, w);
 
                 if (max[0] > 0)
-                    res = (res * table[(BigInteger)(Math.Abs((decimal)max[0]) / 2)]) % mod;
+                    res = res * table[(bif.Abs(max[0]) / 2)] % mod;
                 else if (max[0] < 0)
-                    res = (res * Euclid_2_1(mod, table[(BigInteger)(Math.Abs((decimal)max[0]) / 2)])) % mod;
+                    res = res * mod.Euclid_2_1(table[(bif.Abs(max[0]) / 2)]) % mod;
 
-                for (BigInteger d = 0; d < max[1]; d++)
-                {
-                    for (BigInteger j = 0; j < table.Count; j++)
-                    {
-                        table[j] = ((table[j] * table[j]) % mod);
-                    }
-                }
+                for (int d = 0; d < max[1]; d++)
+                    for (int j = 0; j < table.Count; j++)
+                        table[j] = table[j] * table[j] % mod;
 
-                i = i - max[1];
+                i = i + (int)max[1];
             }
             return res;
+
+            //BigInteger res = 1;
+            //MyList<BigInteger> x = n.ToNAF();
+            //Stopwatch stw = new Stopwatch();
+            //stw.Start();
+
+            //MyList<BigInteger> table = new MyList<BigInteger>();
+            //BigInteger pow = 2 * ((BigInteger)Math.Pow(2, w) - (BigInteger)Math.Pow((-1), w)) / 3 - 1;
+            //for (BigInteger i = 1; i <= pow; i += 2)
+            //    table.Add(BinaryRL(found, i, mod));
+
+            //stw.Stop();
+
+            //table_time = (double)(stw.ElapsedTicks / 10);
+            //for (BigInteger i = x.Count - 1; i > -1; )
+            //{
+            //    MyList<BigInteger> max = new MyList<BigInteger>();
+            //    if (x[i] == 0)
+            //    {
+            //        max.Add(0);
+            //        max.Add(1);
+            //    }
+            //    else
+            //        max = FindLargest1(x, i, w);
+
+            //    if (max[0] > 0)
+            //        res = (res * table[(BigInteger)(Math.Abs((decimal)max[0]) / 2)]) % mod;
+            //    else if (max[0] < 0)
+            //        res = (res * Euclid_2_1(mod, table[(BigInteger)(Math.Abs((decimal)max[0]) / 2)])) % mod;
+
+            //    for (BigInteger d = 0; d < max[1]; d++)
+            //    {
+            //        for (BigInteger j = 0; j < table.Count; j++)
+            //        {
+            //            table[j] = ((table[j] * table[j]) % mod);
+            //        }
+            //    }
+
+            //    i = i - max[1];
+            //}
+            //return res;
         }
         public static BigInteger NAFSlideLR(BigInteger found, BigInteger n, BigInteger mod, int w, out double table_time)
         {
             BigInteger res = 1;
-            MyList<BigInteger> x = ToNAF(n);
+            MyList<BigInteger> x = n.ToNAF();
+
             Stopwatch stw = new Stopwatch();
             stw.Start();
-            MyList<BigInteger> table = new MyList<BigInteger>();
-            BigInteger pow = 2 * ((BigInteger)Math.Pow(2, w) - (BigInteger)Math.Pow((-1), w)) / 3 - 1;
-            for (BigInteger i = 1; i <= pow; i += 2)
-                table.Add(BinaryLR(found, i, mod));
+
+            BigInteger pow = 2 * ((int)Math.Pow(2, w) - (int)Math.Pow((-1), w)) / 3 - 1;
+            MyList<BigInteger> table = NAFLRTable(found, mod, pow, w);
 
             stw.Stop();
-
             table_time = (double)(stw.ElapsedTicks / 10);
-            for (BigInteger i = 0; i < x.Count; )
+
+            for (int i = x.Count - 1; i > -1;)
             {
-                MyList<BigInteger> max = new MyList<BigInteger>();
+                List<BigInteger> max = new List<BigInteger>();
                 if (x[i] == 0)
                 {
                     max.Add(0);
@@ -628,17 +590,52 @@ namespace DigitsPower
                 else
                     max = FindLargest2(x, i, w);
 
-                for (BigInteger d = 0; d < max[1]; d++)
-                    res = (res * res) % mod;
+                for (int d = 0; d < max[1]; d++)
+                    res = res * res % mod;
 
                 if (max[0] > 0)
-                    res = res * table[(BigInteger)(Math.Abs((decimal)max[0]) / 2)];
+                    res = res * table[(bif.Abs(max[0]) / 2)] % mod;
                 else if (max[0] < 0)
-                    res = res * Euclid_2_1(mod, table[(BigInteger)(Math.Abs((decimal)max[0]) / 2)]);
+                    res = res * mod.Euclid_2_1(table[(bif.Abs(max[0]) / 2)]) % mod;
 
-                i = i + max[1];
+                i = i - (int)max[1];
             }
             return res;
+
+            //BigInteger res = 1;
+            //MyList<BigInteger> x = ToNAF(n);
+            //Stopwatch stw = new Stopwatch();
+            //stw.Start();
+            //MyList<BigInteger> table = new MyList<BigInteger>();
+            //BigInteger pow = 2 * ((BigInteger)Math.Pow(2, w) - (BigInteger)Math.Pow((-1), w)) / 3 - 1;
+            //for (BigInteger i = 1; i <= pow; i += 2)
+            //    table.Add(BinaryLR(found, i, mod));
+
+            //stw.Stop();
+
+            //table_time = (double)(stw.ElapsedTicks / 10);
+            //for (BigInteger i = 0; i < x.Count; )
+            //{
+            //    MyList<BigInteger> max = new MyList<BigInteger>();
+            //    if (x[i] == 0)
+            //    {
+            //        max.Add(0);
+            //        max.Add(1);
+            //    }
+            //    else
+            //        max = FindLargest2(x, i, w);
+
+            //    for (BigInteger d = 0; d < max[1]; d++)
+            //        res = (res * res) % mod;
+
+            //    if (max[0] > 0)
+            //        res = res * table[(BigInteger)(Math.Abs((decimal)max[0]) / 2)];
+            //    else if (max[0] < 0)
+            //        res = res * Euclid_2_1(mod, table[(BigInteger)(Math.Abs((decimal)max[0]) / 2)]);
+
+            //    i = i + max[1];
+            //}
+            //return res;
         }
 
         public static BigInteger NAFWindowRL(BigInteger found, BigInteger n, BigInteger mod, int w, out double table_time)
@@ -691,30 +688,7 @@ namespace DigitsPower
             }
             return res;
         }
-        private static MyList<BigInteger> ToWNAF(BigInteger n, int w)
-        {
-            var res = new MyList<BigInteger>();
-            BigInteger k = n;
-            BigInteger r;
-            while (k >= 1)
-            {
-                if (k % 2 != 0)
-                {
-                    r = k % (BigInteger)Math.Pow(2, w);
-
-                    if (r >= (BigInteger)Math.Pow(2, w - 1))
-                        res.Insert(0, r - (BigInteger)Math.Pow(2, w));
-                    else
-                        res.Insert(0, r);
-
-                    k = k - res[0];
-                }
-                else
-                    res.Insert(0, 0);
-                k = k / 2;
-            }
-            return res;
-        }
+        
         public static BigInteger wNAFSlideRL(BigInteger found, BigInteger n, BigInteger mod, int w, out double table_time)
         {
             BigInteger res = 1;
@@ -786,8 +760,181 @@ namespace DigitsPower
             }
             return res;
         }
-        #endregion
 
+        //help methods
+        private static MyList<BigInteger> FindLargest1(MyList<BigInteger> x, BigInteger i, int w)
+        {
+            BigInteger j = i;
+            BigInteger pow = 1;
+            BigInteger temp = x[i];
+
+            BigInteger max_j = i;
+            BigInteger max = x[i];
+            while (j - i + 1 < w && j < x.Count - 1)
+            {
+                j++;
+
+                pow = pow * 2;
+                temp = temp + pow * x[j];
+
+                if (temp % 2 != 0)
+                {
+                    max_j = j;
+                    max = temp;
+                }
+
+            }
+            max_j = max_j - i + 1;
+
+            MyList<BigInteger> r = new MyList<BigInteger>();
+            r.Add(max);
+            r.Add(max_j);
+            return r;
+        }
+        private static MyList<BigInteger> FindLargest2(MyList<BigInteger> x, BigInteger i, int w)
+        {
+            BigInteger j = i;
+            BigInteger pow = 1;
+            BigInteger temp = x[i];
+            BigInteger max_j = i;
+            BigInteger max = x[i];
+            while (i - j + 1 < w && j > 0)
+            {
+                pow = 1;
+                temp = 0;
+                j--;
+                for (BigInteger t = j; t <= i; t++)
+                {
+                    temp = temp + pow * x[t];
+                    pow = pow * 2;
+                }
+
+                if (temp % 2 != 0)
+                {
+                    max_j = j;
+                    max = temp;
+                }
+            }
+            max_j = i - max_j + 1;
+
+            MyList<BigInteger> r = new MyList<BigInteger>();
+            r.Add(max);
+            r.Add(max_j);
+            return r;
+        }
+
+        private static MyList<BigInteger> NAFRLTable(BigInteger found, BigInteger mod, BigInteger power, int w)
+        {
+            var table = new MyList<BigInteger>();
+
+            for (int i = 1; i <= power; i += 2)
+                table.Add(BinaryRL(found, i, mod));
+            return table;
+        }
+        private static MyList<BigInteger> NAFLRTable(BigInteger found, BigInteger mod, BigInteger power, int w)
+        {
+            var table = new MyList<BigInteger>();
+
+            for (int i = 1; i <= power; i += 2)
+                table.Add(BinaryLR(found, i, mod));
+            return table;
+        }
+
+        //from 28.03.16
+        //private static MyList<BigInteger> FindLargest1(MyList<BigInteger> x, BigInteger i, int w)
+        //{
+        //    BigInteger j = i;
+        //    BigInteger pow = 1;
+        //    BigInteger temp = pow * x[i];
+        //    BigInteger max_j = i;
+        //    BigInteger max = x[i];
+        //    while (j - i + 1 < w && j + 1 < x.Count)
+        //    {
+        //        j++;
+        //        pow = pow * 2;
+        //        temp = temp + pow * x[j];
+        //        if (temp % 2 != 0)
+        //        {
+        //            max_j = j;
+        //            max = temp;
+        //        }
+        //    }
+        //    max_j = max_j - i + 1;
+
+        //    MyList<BigInteger> r = new MyList<BigInteger>();
+        //    r.Add(max);
+        //    r.Add(max_j);
+        //    return r;
+        //}
+        //private static MyList<BigInteger> FindLargest2(MyList<BigInteger> x, BigInteger i, int w)
+        //{
+        //    BigInteger j = i;
+        //    BigInteger pow = 1;
+        //    BigInteger temp = pow * x[i];
+        //    BigInteger max_j = i;
+        //    BigInteger max = x[i];
+        //    while (i - j + 1 < w && j > 1)
+        //    {
+        //        pow = 1;
+        //        temp = 0;
+        //        j--;
+        //        for (BigInteger t = j; t <= i; t++)
+        //        {
+        //            temp = temp + pow * x[t];
+        //            pow = pow * 2;
+        //        }
+
+        //        if (temp % 2 != 0)
+        //        {
+        //            max_j = j;
+        //            max = temp;
+        //        }
+        //    }
+        //    max_j = max_j - i + 1;
+
+        //    MyList<BigInteger> r = new MyList<BigInteger>();
+        //    r.Add(max);
+        //    r.Add(max_j);
+        //    return r;
+        //}
+        private static List<string> windows(string s, int w)
+        {
+            string st = s;
+
+            while (st.Length % w != 0)
+                st = "0" + st;
+
+            List<string> bins = new List<string>();
+            for (int i = 0; i < st.Length / w; i++)
+                bins.Add(st.Substring(i * w, w));
+
+            return bins;
+        }
+        private static MyList<BigInteger> ToWNAF(BigInteger n, int w)
+        {
+            var res = new MyList<BigInteger>();
+            BigInteger k = n;
+            BigInteger r;
+            while (k >= 1)
+            {
+                if (k % 2 != 0)
+                {
+                    r = k % (BigInteger)Math.Pow(2, w);
+
+                    if (r >= (BigInteger)Math.Pow(2, w - 1))
+                        res.Insert(0, r - (BigInteger)Math.Pow(2, w));
+                    else
+                        res.Insert(0, r);
+
+                    k = k - res[0];
+                }
+                else
+                    res.Insert(0, 0);
+                k = k / 2;
+            }
+            return res;
+        }
+        #endregion
     }
     abstract class GenFunctions
     {
@@ -1069,23 +1216,25 @@ namespace DigitsPower
             else inv = y + mod;
             return inv;
         }
-        private static MyList<BigInteger> ToNAF(this BigInteger n)
+        public static MyList<BigInteger> ToNAF(this BigInteger k)
         {
-
-            MyList<BigInteger> res = new MyList<BigInteger>();
-            BigInteger k = n;
+            MyList<BigInteger> mas_k = new MyList<BigInteger>();
+            int i = 0;
             while (k >= 1)
             {
                 if (k % 2 != 0)
                 {
-                    res.Insert(0, 2 - k % 4);
-                    k = k - res[0];
+                    mas_k.Add(2 - (k % 4));
+                    k = k - mas_k[i];
                 }
                 else
-                    res.Insert(0, 0);
+                    mas_k.Add(0);
+
+
                 k = k / 2;
+                i++;
             }
-            return res;
+            return mas_k;
         }
         public static BigInteger TwoPow(this BigInteger pow)
         {

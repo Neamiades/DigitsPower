@@ -263,7 +263,7 @@
             this.PowerText.Name = "PowerText";
             this.PowerText.Size = new System.Drawing.Size(305, 20);
             this.PowerText.TabIndex = 10;
-            this.PowerText.Text = "2";
+            this.PowerText.Text = "5";
             // 
             // label5
             // 
@@ -299,7 +299,7 @@
             this.modText.Name = "modText";
             this.modText.Size = new System.Drawing.Size(304, 20);
             this.modText.TabIndex = 6;
-            this.modText.Text = "2";
+            this.modText.Text = "67";
             // 
             // label7
             // 

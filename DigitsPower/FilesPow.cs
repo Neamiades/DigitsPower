@@ -179,6 +179,16 @@ namespace DigitsPower
         protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod) { PowFunctions.AddSubLR(found, pow, mod); }
         //public override void Result(ListBox l) { l.Items.Add("AddSubLR done"); base.Result(l); }
     }
+    class Joye_double_and_add : BinaryPow
+    {
+        public override string Name() { return "Joye_double_and_add"; }
+        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod) { PowFunctions.Joye_double_and_add(found, pow, mod); }
+    }
+    class MontgomeryLadder : BinaryPow
+    {
+        public override string Name() { return "MontgomeryLadder"; }
+        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod) { PowFunctions.MontgomeryLadder(found, pow, mod); }
+    }
     class DBNS2RL : BinaryPow
     {
         public override string Name() { return "DBNS2RL"; }

@@ -146,12 +146,12 @@ namespace DigitsPower
 
             return res;
         }
-        public static BigInteger Joye_double_and_add(BigInteger found, BigInteger mod, BigInteger n)
+        public static BigInteger Joye_double_and_add(BigInteger found, BigInteger pow, BigInteger mod)
         {
             BigInteger res = 1;
             BigInteger t = found;
 
-            string Binary = bif.ToBin(n);
+            string Binary = bif.ToBin(pow);
             for (int i = Binary.Length - 1; i >= 0; i--)
             {
                 if (Binary[i] == '1')
@@ -167,12 +167,12 @@ namespace DigitsPower
             }
             return res;
         }
-        public static BigInteger MontgomeryLadder(BigInteger found, BigInteger mod, BigInteger n)
+        public static BigInteger MontgomeryLadder(BigInteger found, BigInteger pow, BigInteger mod)
         {
             BigInteger res = 1;
             BigInteger t = found;
 
-            string Binary = bif.ToBin(n);
+            string Binary = bif.ToBin(pow);
             for (int i = 0; i < Binary.Length; i++)
             {
                 if (Binary[i] == '0')
@@ -200,45 +200,58 @@ namespace DigitsPower
 
         public static BigInteger DBNS2RL(BigInteger found, BigInteger pow, BigInteger mod, Inverse inv)
         {
-            List<int[]> x = ToDBNS2RL(pow);
+            List<int[]> mas_k = ToDBNS2RL(pow);
 
             BigInteger res = 1;
             BigInteger t = found;
 
-            for (int i = 0; i < x.Count; i++)
+            //for (int i = 0; i < mas_k.Count; i++)
+            //{
+            //    t = t * TwoPow(mas_k[i][1]) * (BigInteger)Math.Pow(3,mas_k[i][2]);
+            //    res += mas_k[i][0] * t;
+            //}
+
+            //if (pow != res)
+            //{
+            //    throw new InvalidProgramException();
+            //}
+
+
+
+            for (int i = 0; i < mas_k.Count; i++)
             {
-                for (int j = 0; j < x[i][1]; j++)
+                for (int j = 0; j < mas_k[i][1]; j++)
                     t = (t * t) % mod;
-                for (int j = 0; j < x[i][2]; j++)
+                for (int j = 0; j < mas_k[i][2]; j++)
                     t = ((t * t) % mod * t) % mod;
 
-                if (x[i][0] == 1)
+                if (mas_k[i][0] == 1)
                     res = res * t % mod;
-                else if (x[i][0] == -1)
+                else if (mas_k[i][0] == -1)
                     res = res * inv(t, mod) % mod;
             }
             return res;
         }
         public static BigInteger DBNS2LR(BigInteger found, BigInteger pow, BigInteger mod,  Inverse inv)
         {
-            List<int[]> x = ToDBNS2LR(pow);
+            List<int[]> mas_k = ToDBNS2LR(pow);
             BigInteger res = found;
 
-            for (int i = x.Count - 1; i > 0; i--)
+            for (int i = mas_k.Count - 1; i > 0; i--)
             {
-                for (int j = 0; j < x[i][1]; j++)
+                for (int j = 0; j < mas_k[i][1]; j++)
                     res = res * res % mod;
-                for (int j = 0; j < x[i][2]; j++)
+                for (int j = 0; j < mas_k[i][2]; j++)
                     res = ((res * res) % mod * res) % mod;
 
-                if (x[i][0] == 1)
+                if (mas_k[i][0] == 1)
                     res = (res * found) % mod;
-                else if (x[i][0] == -1)
+                else if (mas_k[i][0] == -1)
                     res = res * inv(found, mod) % mod;
             }
-            for (int j = 0; j < x[0][1]; j++)
+            for (int j = 0; j < mas_k[0][1]; j++)
                 res = (res * res) % mod;
-            for (int j = 0; j < x[0][2]; j++)
+            for (int j = 0; j < mas_k[0][2]; j++)
                 res = ((res * res) % mod * res) % mod;
             return res;
         }
@@ -265,11 +278,11 @@ namespace DigitsPower
             Array.Reverse(charArray);
             return new string(charArray);
         }
-        private static MyList<BigInteger> ToNAF(BigInteger n)
+        private static MyList<BigInteger> ToNAF(BigInteger pow)
         {
 
             MyList<BigInteger> res = new MyList<BigInteger>();
-            BigInteger k = n;
+            BigInteger k = pow;
             while (k >= 1)
             {
                 if (k % 2 != 0)
@@ -283,9 +296,9 @@ namespace DigitsPower
             }
             return res;
         }
-        private static List<int[]> ToDBNS2RL(BigInteger pow)
+        private static MyList<int[]> ToDBNS2RL(BigInteger pow)
         {
-            List<int[]> x = new List<int[]>();
+            var x = new MyList<int[]>();
             BigInteger v = pow;
             int i = 0;
             while (v != 0)
@@ -423,80 +436,92 @@ namespace DigitsPower
             return res;
         }
 
-        public static BigInteger SlideRL(BigInteger found, BigInteger n, BigInteger mod, int w, out double table_time)
+        public static BigInteger SlideRL(BigInteger found, BigInteger pow, BigInteger mod, int w, out double table_time)
         {
             Stopwatch stw = new Stopwatch();
             stw.Start();
-            MyList<BigInteger> table = Table(found, n, w, mod);
+            BigInteger power = (BigInteger)Math.Pow(2, w - 1);
+            var table = SlideRLTable(found, mod, power, w);
+            
             stw.Stop();
-
-            table_time = (double)(stw.ElapsedTicks / 10);
-            int power = (int)Math.Pow(2, w - 1);
-            table.Add(BinaryRL(found, power, mod));
-            for (int i = 0; i < power - 1; i++)
-                table.Add((table[i] * found) % mod);
+            table_time = (stw.ElapsedTicks / 10);
 
             BigInteger res = 1;
-            BigInteger t = 1;
+            BigInteger temp = found;
 
-            List<string> bins = windows(ConvToBinary(n), w);
+            string binary = bif.ToBin(pow);
 
-            BigInteger pow = 1;
-
-            for (int i = bins.Count - 1; i > -1; i--)
+            while (binary.Length > 0)
             {
-                int c = Convert.ToInt32(bins[i], 2);
+                int index = binary.Length - 1;
+                if (binary.Length < w || binary[index - w + 1] == '0')
+                {
+                    if (binary[index] == '1')
+                        res = (res * temp) % mod;
 
-                if (c < power)
-                    res = (res * BinaryRL(found, c * pow, mod)) % mod;//Приведення до степеня після кожного кроку
-                else
-                    res = (res * table[c - power]) % mod;//Приведення до степеня після кожного кроку
-
-                for (int k = 0; k < w; k++)
                     for (int j = 0; j < table.Count; j++)
                         table[j] = (table[j] * table[j]) % mod;
 
-                pow = pow * (int)Math.Pow(2, w);
+                    temp = (temp * temp) % mod;
+
+                    binary = binary.Remove(index, 1);
+                }
+                else
+                {
+                    int c = Convert.ToInt32(binary.Substring(index - w + 1, w), 2);
+                    res = (res * table[c - power]) % mod;
+
+                    temp = (temp * table[table.Count - 1]) % mod;
+
+                    for (int k = 0; k < w; k++)
+                        for (int j = 0; j < table.Count; j++)
+                            table[j] = (table[j] * table[j]) % mod;
+
+                    binary = binary.Remove(index - w + 1, w);
+                }
             }
             return res;
         }
-        public static BigInteger SlideLR(BigInteger found, BigInteger n, BigInteger mod, int w, out double table_time)
+        public static BigInteger SlideLR(BigInteger found, BigInteger power, BigInteger mod, int w, out double table_time)
         {
             Stopwatch stw = new Stopwatch();
             stw.Start();
-            MyList<BigInteger> table = Table(found, n, w, mod);
+            BigInteger pow = 2 * ((BigInteger)Math.Pow(2, w) - (BigInteger)Math.Pow((-1), w)) / 3 - 1;
+            var table = NAFLRTable(found, mod, pow, w);
             stw.Stop();
 
-            table_time = (double)(stw.ElapsedTicks / 10);
-            int power = (int)Math.Pow(2, w - 1);
-            table.Add(BinaryLR(found, power, mod));
-            for (int i = 0; i < power - 1; i++)
-                table.Add((table[i] * found)%mod);//мод?
-
+            table_time = (stw.ElapsedTicks / 10);
+            MyList<BigInteger> x = power.ToNAF();
+            
             BigInteger res = 1;
-            BigInteger t = 1;
-
-            List<string> bins = windows(ConvToBinary(n), w);
-
-            for (int i = 0; i < bins.Count; i++)
+            for (BigInteger i = x.Count - 1; i > -1;)
             {
-                for (int k = 0; k < w; k++)
+                var max = new MyList<BigInteger>();
+                if (x[i] == 0)
+                {
+                    max.Add(0);
+                    max.Add(1);
+                }
+                else
+                    max = FindLargest2(x, i, w);
+
+                for (int d = 0; d < max[1]; d++)
                     res = (res * res) % mod;
 
-                int c = Convert.ToInt32(bins[i], 2);
+                if (max[0] > 0)
+                    res = (res * table[(int)(bif.Abs(max[0]) / 2)]) % mod;
+                else if (max[0] < 0)
+                    res = (res * mod.Euclid_2_1(table[(bif.Abs(max[0]) / 2)])) % mod;
 
-                if (c < power)
-                    res = (res * BinaryLR(found, c, mod)) % mod;//Приведення до степеня після кожного кроку
-                else
-                    res = (res * table[c - power]) % mod;//Приведення до степеня після кожного кроку
+                i = i - (int)max[1];
             }
             return res;
         }
         
-        public static BigInteger NAFSlideRL(BigInteger found, BigInteger n, BigInteger mod, int w, out double table_time)
+        public static BigInteger NAFSlideRL(BigInteger found, BigInteger power, BigInteger mod, int w, out double table_time)
         {
             BigInteger res = 1;
-            MyList<BigInteger> x = n.ToNAF();
+            MyList<BigInteger> x = power.ToNAF();
 
             Stopwatch stw = new Stopwatch();
             stw.Start();
@@ -525,7 +550,7 @@ namespace DigitsPower
             return res;
 
             //BigInteger res = 1;
-            //MyList<BigInteger> x = n.ToNAF();
+            //MyList<BigInteger> x = power.ToNAF();
             //Stopwatch stw = new Stopwatch();
             //stw.Start();
 
@@ -565,10 +590,10 @@ namespace DigitsPower
             //}
             //return res;
         }
-        public static BigInteger NAFSlideLR(BigInteger found, BigInteger n, BigInteger mod, int w, out double table_time)
+        public static BigInteger NAFSlideLR(BigInteger found, BigInteger power, BigInteger mod, int w, out double table_time)
         {
             BigInteger res = 1;
-            MyList<BigInteger> x = n.ToNAF();
+            MyList<BigInteger> x = power.ToNAF();
 
             Stopwatch stw = new Stopwatch();
             stw.Start();
@@ -603,7 +628,7 @@ namespace DigitsPower
             return res;
 
             //BigInteger res = 1;
-            //MyList<BigInteger> x = ToNAF(n);
+            //MyList<BigInteger> x = ToNAF(power);
             //Stopwatch stw = new Stopwatch();
             //stw.Start();
             //MyList<BigInteger> table = new MyList<BigInteger>();
@@ -638,10 +663,10 @@ namespace DigitsPower
             //return res;
         }
 
-        public static BigInteger NAFWindowRL(BigInteger found, BigInteger n, BigInteger mod, int w, out double table_time)
+        public static BigInteger NAFWindowRL(BigInteger found, BigInteger power, BigInteger mod, int w, out double table_time)
         {
             BigInteger res = 1;
-            MyList<BigInteger> x = ToNAF(n);
+            MyList<BigInteger> x = ToNAF(power);
             MyList<BigInteger> table = new MyList<BigInteger>();
             BigInteger pow = (BigInteger)Math.Pow(2, w - 1);
 
@@ -664,10 +689,10 @@ namespace DigitsPower
             }
             return res;
         }
-        public static BigInteger NAFWindowLR(BigInteger found, BigInteger n, BigInteger mod, int w, out double table_time)
+        public static BigInteger NAFWindowLR(BigInteger found, BigInteger power, BigInteger mod, int w, out double table_time)
         {
             BigInteger res = 1;
-            var x = ToNAF(n);
+            var x = ToNAF(power);
             var table = new MyList<BigInteger>();
             BigInteger pow = (BigInteger)Math.Pow(2, w - 1);
 
@@ -689,10 +714,10 @@ namespace DigitsPower
             return res;
         }
         
-        public static BigInteger wNAFSlideRL(BigInteger found, BigInteger n, BigInteger mod, int w, out double table_time)
+        public static BigInteger wNAFSlideRL(BigInteger found, BigInteger power, BigInteger mod, int w, out double table_time)
         {
             BigInteger res = 1;
-            var x = ToWNAF(n, w);
+            var x = ToWNAF(power, w);
 
             var table = new MyList<BigInteger>();
             BigInteger pow = 2 * ((BigInteger)Math.Pow(2, w) - (BigInteger)Math.Pow((-1), w)) / 3 - 1;
@@ -723,10 +748,10 @@ namespace DigitsPower
             }
             return res;
         }
-        public static BigInteger wNAFSlideLR(BigInteger found, BigInteger n, BigInteger mod, int w, out double table_time)
+        public static BigInteger wNAFSlideLR(BigInteger found, BigInteger power, BigInteger mod, int w, out double table_time)
         {
             BigInteger res = 1;
-            var x = ToWNAF(n,w);
+            var x = ToWNAF(power,w);
 
             var table = new MyList<BigInteger>();
             BigInteger pow = 2 * ((BigInteger)Math.Pow(2, w) - (BigInteger)Math.Pow((-1), w)) / 3 - 1;
@@ -839,64 +864,23 @@ namespace DigitsPower
                 table.Add(BinaryLR(found, i, mod));
             return table;
         }
+        private static MyList<BigInteger> SlideRLTable(BigInteger found, BigInteger mod, BigInteger power, int w)
+        {
+            var table = new MyList<BigInteger>();
+            table.Add(BinaryRL(found, power, mod));
+            for (BigInteger i = 0; i < power - 1; i++)
+                table.Add(table[i] * found % mod);
+            return table;
+        }
+        private static MyList<BigInteger> SlideLRTable(BigInteger found, BigInteger mod, BigInteger power, int w)
+        {
+            var table = new MyList<BigInteger>();
+            table.Add(BinaryLR(found, power, mod));
+            for (BigInteger i = 0; i < power - 1; i++)
+                table.Add(table[i] * found % mod);
+            return table;
+        }
 
-        //from 28.03.16
-        //private static MyList<BigInteger> FindLargest1(MyList<BigInteger> x, BigInteger i, int w)
-        //{
-        //    BigInteger j = i;
-        //    BigInteger pow = 1;
-        //    BigInteger temp = pow * x[i];
-        //    BigInteger max_j = i;
-        //    BigInteger max = x[i];
-        //    while (j - i + 1 < w && j + 1 < x.Count)
-        //    {
-        //        j++;
-        //        pow = pow * 2;
-        //        temp = temp + pow * x[j];
-        //        if (temp % 2 != 0)
-        //        {
-        //            max_j = j;
-        //            max = temp;
-        //        }
-        //    }
-        //    max_j = max_j - i + 1;
-
-        //    MyList<BigInteger> r = new MyList<BigInteger>();
-        //    r.Add(max);
-        //    r.Add(max_j);
-        //    return r;
-        //}
-        //private static MyList<BigInteger> FindLargest2(MyList<BigInteger> x, BigInteger i, int w)
-        //{
-        //    BigInteger j = i;
-        //    BigInteger pow = 1;
-        //    BigInteger temp = pow * x[i];
-        //    BigInteger max_j = i;
-        //    BigInteger max = x[i];
-        //    while (i - j + 1 < w && j > 1)
-        //    {
-        //        pow = 1;
-        //        temp = 0;
-        //        j--;
-        //        for (BigInteger t = j; t <= i; t++)
-        //        {
-        //            temp = temp + pow * x[t];
-        //            pow = pow * 2;
-        //        }
-
-        //        if (temp % 2 != 0)
-        //        {
-        //            max_j = j;
-        //            max = temp;
-        //        }
-        //    }
-        //    max_j = max_j - i + 1;
-
-        //    MyList<BigInteger> r = new MyList<BigInteger>();
-        //    r.Add(max);
-        //    r.Add(max_j);
-        //    return r;
-        //}
         private static List<string> windows(string s, int w)
         {
             string st = s;
@@ -910,10 +894,10 @@ namespace DigitsPower
 
             return bins;
         }
-        private static MyList<BigInteger> ToWNAF(BigInteger n, int w)
+        private static MyList<BigInteger> ToWNAF(BigInteger power, int w)
         {
             var res = new MyList<BigInteger>();
-            BigInteger k = n;
+            BigInteger k = power;
             BigInteger r;
             while (k >= 1)
             {

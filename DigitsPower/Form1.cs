@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using System.Numerics;
 using System.IO;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 //using System.Security.Cryptography;
 
@@ -35,74 +36,22 @@ namespace DigitsPower
     
     public partial class MainForm : Form
     {
-        
-
         public MainForm()
         {
             InitializeComponent();
-            //UpdateDirectoryList();
             CreateDirectories();
             Axis1Box.SelectedIndex = 0;
             Axis2Box.SelectedIndex = 1;
-            //radioButton1.Checked = true;
             tabControl1.SelectedIndex = 2;
         }
-        
-        private void Calculatebutton_Click(object sender, EventArgs e)
-        {
-            AdditionalParameters.A = Int64.Parse(textA.Text);
-            AdditionalParameters.B = Int64.Parse(textB.Text);
 
-            BigInteger mod = BigInteger.Parse(modText.Text);
-            BigInteger pow = BigInteger.Parse(PowerText.Text);
-            int window = Int32.Parse(WindowText.Text);
-            BigInteger num = BigInteger.Parse(NumberText.Text);
-            List<string> s = new List<string>();
-            double table = 0;
-            OperationsResult.Items.Clear();
-
-            if (OperationsList.CheckedIndices.Count > 0)
-            {
-                for (int i = 0; i < OperationsList.CheckedIndices.Count; i++)
-                {
-
-                    if (OperationsList.CheckedIndices[i] == 0) { OperationsResult.Items.Add("Binary RL\t: " + (PowFunctions.BinaryRL(num, pow, mod)).ToString()); OperationsResult.Update(); }
-                    if (OperationsList.CheckedIndices[i] == 1) { OperationsResult.Items.Add("Binary LR\t: " + (PowFunctions.BinaryLR(num, pow, mod)).ToString()); OperationsResult.Update(); }
-                    if (OperationsList.CheckedIndices[i] == 2) { OperationsResult.Items.Add("Window RL\t: " + (PowFunctions.WindowRL(num, pow, mod, window, out table)).ToString()); OperationsResult.Update(); }
-                    if (OperationsList.CheckedIndices[i] == 3) { OperationsResult.Items.Add("Window LR\t: " + (PowFunctions.WindowLR(num, pow, mod, window, out table)).ToString()); OperationsResult.Update(); }
-                    if (OperationsList.CheckedIndices[i] == 4) { OperationsResult.Items.Add("Slide RL\t\t: " + (PowFunctions.SlideRL(num, pow, mod, window, out table)).ToString()); OperationsResult.Update(); }
-                    if (OperationsList.CheckedIndices[i] == 5) { OperationsResult.Items.Add("Slide LR\t\t: " + (PowFunctions.SlideLR(num, pow, mod, window, out table)).ToString()); OperationsResult.Update(); }
-                    if (OperationsList.CheckedIndices[i] == 6) { OperationsResult.Items.Add("NAF Binary RL\t: " + (PowFunctions.NAFBinaryRL(num, pow, mod).ToString())); OperationsResult.Update(); }
-                    if (OperationsList.CheckedIndices[i] == 7) { OperationsResult.Items.Add("NAF Binary LR\t: " + (PowFunctions.NAFBinaryLR(num, pow, mod).ToString())); OperationsResult.Update(); }
-                    if (OperationsList.CheckedIndices[i] == 8) { OperationsResult.Items.Add("NAF Slide RL\t: " + (PowFunctions.NAFSlideRL(num, pow, mod, window, out table).ToString())); OperationsResult.Update(); }
-                    if (OperationsList.CheckedIndices[i] == 9) { OperationsResult.Items.Add("NAF Slide LR\t: " + (PowFunctions.NAFSlideLR(num, pow, mod, window, out table).ToString())); OperationsResult.Update(); }
-                    if (OperationsList.CheckedIndices[i] == 10) { OperationsResult.Items.Add("NAF Window RL\t: " + (PowFunctions.NAFWindowRL(num, pow, mod, window, out table).ToString())); OperationsResult.Update(); }
-                    if (OperationsList.CheckedIndices[i] == 11) { OperationsResult.Items.Add("NAF Window LR\t: " + (PowFunctions.NAFWindowLR(num, pow, mod, window, out table).ToString())); OperationsResult.Update(); }
-                    if (OperationsList.CheckedIndices[i] == 12) { OperationsResult.Items.Add("wNAF Slide RL\t: " + (PowFunctions.wNAFSlideRL(num, pow, mod, window, out table).ToString())); OperationsResult.Update(); }
-                    if (OperationsList.CheckedIndices[i] == 13) { OperationsResult.Items.Add("wNAF Slide RL\t: " + (PowFunctions.wNAFSlideLR(num, pow, mod, window, out table).ToString())); OperationsResult.Update(); }
-                    if (OperationsList.CheckedIndices[i] == 14) { OperationsResult.Items.Add("Add Sub RL\t: " + (PowFunctions.AddSubRL(num, pow, mod).ToString())); OperationsResult.Update(); }
-                    if (OperationsList.CheckedIndices[i] == 15) { OperationsResult.Items.Add("Add Sub LR\t: " + (PowFunctions.AddSubLR(num, pow, mod).ToString())); OperationsResult.Update(); }
-
-
-
-
-                    if (OperationsList.CheckedIndices[i] == 18) { OperationsResult.Items.Add("DBNS1RL 1\t: " + (PowFunctions.DBNS1RL(num, pow, mod,true).ToString())); OperationsResult.Update(); }
-                    if (OperationsList.CheckedIndices[i] == 19) { OperationsResult.Items.Add("DBNS1RL 2\t: " + (PowFunctions.DBNS1RL(num, pow, mod,false).ToString())); OperationsResult.Update(); }
-                    if (OperationsList.CheckedIndices[i] == 20) { OperationsResult.Items.Add("DBNS1LR 1\t: " + (PowFunctions.DBNS1LR(num, pow, mod,true).ToString())); OperationsResult.Update(); }
-                    if (OperationsList.CheckedIndices[i] == 21) { OperationsResult.Items.Add("DBNS1LR 2\t: " + (PowFunctions.DBNS1LR(num, pow, mod,false).ToString())); OperationsResult.Update(); }
-
-                    if (OperationsList.CheckedIndices[i] == 22) { OperationsResult.Items.Add("DBNS2RL\t: " + (PowFunctions.DBNS2RL(num, pow, mod, PowFunctions.Euclid_2_1).ToString())); OperationsResult.Update(); }
-                    if (OperationsList.CheckedIndices[i] == 23) { OperationsResult.Items.Add("DBNS2LR\t: " + (PowFunctions.DBNS2LR(num, pow, mod, PowFunctions.Euclid_2_1).ToString())); OperationsResult.Update(); }
-                }
-            }
-        }
+        #region InitializeMethods
         private void CreateDirectories()
         {
             string path = Directory.GetCurrentDirectory();
 
             try
             {
-                //Directory.CreateDirectory(path + "//" + DateTime.Now.ToLocalTime().ToString().Replace(':', '-'));
                 Directory.CreateDirectory(path + "\\Foundations");
                 Directory.CreateDirectory(path + "\\Degrees");
                 Directory.CreateDirectory(path + "\\Mods");
@@ -123,15 +72,13 @@ namespace DigitsPower
                     ModsDir.SelectedIndex = 0;
                 }
                 
-               
-                
-                
             }
             catch (Exception err)
             {
                 MessageBox.Show(err.Message, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
+
         private void UpdateDirectoryList()
         {
             try
@@ -166,21 +113,15 @@ namespace DigitsPower
                     ModsDir.Items.Add(dirs2[dirs2.Length - 1]);
                 }
                 dirs = Directory.GetDirectories(path + "\\Results");
-                //ResultList.Items.Clear();
-                //ResultList.Items.Clear();
-                //foreach (string s in dirs)
-                //{
-                //    string[] dirs2 = s.Split('\\');
-                //    ResultList.Items.Add(dirs2[dirs2.Length - 1]);
-                //    ResultList.Items.Add(dirs2[dirs2.Length - 1]);
-                //}
             }
-            catch (Exception)
+            catch (Exception err)
             {
-
+                MessageBox.Show(err.Message, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
-        
+        #endregion
+
+        #region GenerationMethods
         private void GenFile(GenFunctions.random_num func, string dir, string len, string count, string type , string radix)
         {
             string path = Directory.GetCurrentDirectory();
@@ -211,6 +152,7 @@ namespace DigitsPower
             }
             UpdateDirectoryList();
         }
+
         private void GenFound_Click(object sender, EventArgs e)
         {
             GenFile(GenFunctions.random_max, "Foundations", FoundLenght.Text,FoundCount.Text, "Found",comboBox2.Text);
@@ -240,10 +182,13 @@ namespace DigitsPower
             }
             
         }
+        #endregion
+
+        #region CalculateMethods
         private void ResultsButton_Click(object sender, EventArgs e)
         {
-            AdditionalParameters.A = Int64.Parse(textBox5.Text);
-            AdditionalParameters.B = Int64.Parse(textBox4.Text);
+            AdditionalParameters.A = long.Parse(textBox5.Text);
+            AdditionalParameters.B = long.Parse(textBox4.Text);
 
             string choice = comboBox1.Text;
             string choicew = null;
@@ -256,70 +201,108 @@ namespace DigitsPower
             choicew = Axis1Box.SelectedItem + " " + Axis2Box.SelectedItem;
             if (OperCheckList.CheckedIndices.Count > 0)
             {
-                for (int i = 0; i < OperCheckList.CheckedIndices.Count; i++)
-                {
-                    #region Binary
-                    if (OperCheckList.CheckedIndices[i] == 0) { (new BinaryRL()).Create_Result(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choice); }
-                    if (OperCheckList.CheckedIndices[i] == 1) { (new BinaryLR()).Create_Result(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choice); }
-                    if (OperCheckList.CheckedIndices[i] == 6) { (new NAFBinaryRL()).Create_Result(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choice); }
-                    if (OperCheckList.CheckedIndices[i] == 7) { (new NAFBinaryLR()).Create_Result(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choice); }
-                    if (OperCheckList.CheckedIndices[i] == 14) { (new AddSubRL()).Create_Result(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choice); }
-                    if (OperCheckList.CheckedIndices[i] == 15) { (new AddSubLR()).Create_Result(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choice); }
-
-
-                    //with To_DBNS_1
-                    if (OperCheckList.CheckedIndices[i] == 18) { (new DBNS1RL(true)).Create_Result(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choice); }
-                    //with To_DBNS_2
-                    if (OperCheckList.CheckedIndices[i] == 19) { (new DBNS1RL(false)).Create_Result(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choice); }
-                    //with To_DBNS_1
-                    if (OperCheckList.CheckedIndices[i] == 20) { (new DBNS1LR(true)).Create_Result(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choice); }
-                    //with To_DBNS_2
-                    if (OperCheckList.CheckedIndices[i] == 21) { (new DBNS1LR(false)).Create_Result(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choice); }
-
-                    if (OperCheckList.CheckedIndices[i] == 22) { (new DBNS2RL()).Create_Result(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choice); }
-                    if (OperCheckList.CheckedIndices[i] == 23) { (new DBNS2RL()).Create_Result(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choice); }
-                    #endregion
-
-                    #region Window
-                    if (OperCheckList.CheckedIndices[i] == 2) { (new WindowRL()).Create_Result(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choicew, WinMode.Text, TableWith.Checked); }
-                    if (OperCheckList.CheckedIndices[i] == 3) { (new WindowLR()).Create_Result(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choicew, WinMode.Text, TableWith.Checked); }
-                    if (OperCheckList.CheckedIndices[i] == 4) { (new SlideRL()).Create_Result(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choicew, WinMode.Text, TableWith.Checked); }
-                    if (OperCheckList.CheckedIndices[i] == 5) { (new SlideRL()).Create_Result(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choicew, WinMode.Text, TableWith.Checked); }
-
-                    if (OperCheckList.CheckedIndices[i] == 8) { (new NAFSlideRL()).Create_Result(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choicew, WinMode.Text, TableWith.Checked); }
-                    if (OperCheckList.CheckedIndices[i] == 9) { (new NAFSlideLR()).Create_Result(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choicew, WinMode.Text, TableWith.Checked); }
-                    if (OperCheckList.CheckedIndices[i] == 10) { (new NAFWindowRL()).Create_Result(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choicew, WinMode.Text, TableWith.Checked); }
-                    if (OperCheckList.CheckedIndices[i] == 11) { (new NAFWindowLR()).Create_Result(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choicew, WinMode.Text, TableWith.Checked); }
-                    if (OperCheckList.CheckedIndices[i] == 12) { (new wNAFSlideRL()).Create_Result(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choicew, WinMode.Text, TableWith.Checked); }
-                    if (OperCheckList.CheckedIndices[i] == 13) { (new wNAFSlideLR()).Create_Result(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choicew, WinMode.Text, TableWith.Checked); }
-                    #endregion
-
-                }
+                GetResults(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choice, choicew, WinMode.Text, TableWith.Checked);
             }
             string path = Directory.GetCurrentDirectory();
             string[] dirs = Directory.GetDirectories(path + "\\Results");
-            //ResultList.Items.Clear();
-            //foreach (string s in dirs)
-            //{
-            //    string[] dirs2 = s.Split('\\');
-            //    ResultList.Items.Add(dirs2[dirs2.Length - 1]);
-            //}
             var result = MessageBox.Show("All done", "Result",
-                                 MessageBoxButtons.OK,
-                                 MessageBoxIcon.Information);
+                                         MessageBoxButtons.OK,
+                                         MessageBoxIcon.Information);
         }
 
-        private void label13_Click(object sender, EventArgs e)
+        private void GetResults(string found, string degree, string mod, string choice, string choicew, string WinMode, bool TableWith)
         {
+            for (int i = 0; i < OperCheckList.CheckedIndices.Count; i++)
+            {
+                #region Binary
+                if (OperCheckList.CheckedIndices[i] == 0) { (new BinaryRL()).Create_Result(found, degree, mod, choice); }
+                if (OperCheckList.CheckedIndices[i] == 1) { (new BinaryLR()).Create_Result(found, degree, mod, choice); }
+                if (OperCheckList.CheckedIndices[i] == 6) { (new NAFBinaryRL()).Create_Result(found, degree, mod, choice); }
+                if (OperCheckList.CheckedIndices[i] == 7) { (new NAFBinaryLR()).Create_Result(found, degree, mod, choice); }
+                if (OperCheckList.CheckedIndices[i] == 14) { (new AddSubRL()).Create_Result(found, degree, mod, choice); }
+                if (OperCheckList.CheckedIndices[i] == 15) { (new AddSubLR()).Create_Result(found, degree, mod, choice); }
+                if (OperCheckList.CheckedIndices[i] == 16) { (new Joye_double_and_add()).Create_Result(found, degree, mod, choice); }
+                if (OperCheckList.CheckedIndices[i] == 17) { (new MontgomeryLadder()).Create_Result(found, degree, mod, choice); }
+                if (OperCheckList.CheckedIndices[i] == 18) { (new DBNS1RL(true)).Create_Result(found, degree, mod, choice); }
+                if (OperCheckList.CheckedIndices[i] == 19) { (new DBNS1RL(false)).Create_Result(found, degree, mod, choice); }
+                if (OperCheckList.CheckedIndices[i] == 20) { (new DBNS1LR(true)).Create_Result(found, degree, mod, choice); }
+                if (OperCheckList.CheckedIndices[i] == 21) { (new DBNS1LR(false)).Create_Result(found, degree, mod, choice); }
+                if (OperCheckList.CheckedIndices[i] == 22) { (new DBNS2RL()).Create_Result(found, degree, mod, choice); }
+                if (OperCheckList.CheckedIndices[i] == 23) { (new DBNS2RL()).Create_Result(found, degree, mod, choice); }
+                #endregion
 
+                #region Window
+                if (OperCheckList.CheckedIndices[i] == 2) { (new WindowRL()).Create_Result(found, degree, mod, choicew, WinMode, TableWith); }
+                if (OperCheckList.CheckedIndices[i] == 3) { (new WindowLR()).Create_Result(found, degree, mod, choicew, WinMode, TableWith); }
+                if (OperCheckList.CheckedIndices[i] == 4) { (new SlideRL()).Create_Result(found, degree, mod, choicew, WinMode, TableWith); }
+                if (OperCheckList.CheckedIndices[i] == 5) { (new SlideRL()).Create_Result(found, degree, mod, choicew, WinMode, TableWith); }
+                if (OperCheckList.CheckedIndices[i] == 8) { (new NAFSlideRL()).Create_Result(found, degree, mod, choicew, WinMode, TableWith); }
+                if (OperCheckList.CheckedIndices[i] == 9) { (new NAFSlideLR()).Create_Result(found, degree, mod, choicew, WinMode, TableWith); }
+                if (OperCheckList.CheckedIndices[i] == 10) { (new NAFWindowRL()).Create_Result(found, degree, mod, choicew, WinMode, TableWith); }
+                if (OperCheckList.CheckedIndices[i] == 11) { (new NAFWindowLR()).Create_Result(found, degree, mod, choicew, WinMode, TableWith); }
+                if (OperCheckList.CheckedIndices[i] == 12) { (new wNAFSlideRL()).Create_Result(found, degree, mod, choicew, WinMode, TableWith); }
+                if (OperCheckList.CheckedIndices[i] == 13) { (new wNAFSlideLR()).Create_Result(found, degree, mod, choicew, WinMode, TableWith); }
+                #endregion
+
+            }
         }
 
+        private void Calculatebutton_Click(object sender, EventArgs e)
+        {
+            AdditionalParameters.A = Int64.Parse(textA.Text);
+            AdditionalParameters.B = Int64.Parse(textB.Text);
+
+            BigInteger mod = BigInteger.Parse(modText.Text);
+            BigInteger pow = BigInteger.Parse(PowerText.Text);
+            int window = Int32.Parse(WindowText.Text);
+            BigInteger num = BigInteger.Parse(NumberText.Text);
+            List<string> s = new List<string>();
+            double table = 0;
+            OperationsResult.Items.Clear();
+
+            if (OperationsList.CheckedIndices.Count > 0)
+            {
+                for (int i = 0; i < OperationsList.CheckedIndices.Count; i++)
+                {
+
+                    if (OperationsList.CheckedIndices[i] == 0) { OperationsResult.Items.Add("Binary RL\t: " + (PowFunctions.BinaryRL(num, pow, mod)).ToString()); OperationsResult.Update(); }
+                    if (OperationsList.CheckedIndices[i] == 1) { OperationsResult.Items.Add("Binary LR\t: " + (PowFunctions.BinaryLR(num, pow, mod)).ToString()); OperationsResult.Update(); }
+                    if (OperationsList.CheckedIndices[i] == 2) { OperationsResult.Items.Add("Window RL\t: " + (PowFunctions.WindowRL(num, pow, mod, window, out table)).ToString()); OperationsResult.Update(); }
+                    if (OperationsList.CheckedIndices[i] == 3) { OperationsResult.Items.Add("Window LR\t: " + (PowFunctions.WindowLR(num, pow, mod, window, out table)).ToString()); OperationsResult.Update(); }
+                    if (OperationsList.CheckedIndices[i] == 4) { OperationsResult.Items.Add("Slide RL\t\t: " + (PowFunctions.SlideRL(num, pow, mod, window, out table)).ToString()); OperationsResult.Update(); }
+                    if (OperationsList.CheckedIndices[i] == 5) { OperationsResult.Items.Add("Slide LR\t\t: " + (PowFunctions.SlideLR(num, pow, mod, window, out table)).ToString()); OperationsResult.Update(); }
+                    if (OperationsList.CheckedIndices[i] == 6) { OperationsResult.Items.Add("NAF Binary RL\t: " + (PowFunctions.NAFBinaryRL(num, pow, mod).ToString())); OperationsResult.Update(); }
+                    if (OperationsList.CheckedIndices[i] == 7) { OperationsResult.Items.Add("NAF Binary LR\t: " + (PowFunctions.NAFBinaryLR(num, pow, mod).ToString())); OperationsResult.Update(); }
+                    if (OperationsList.CheckedIndices[i] == 8) { OperationsResult.Items.Add("NAF Slide RL\t: " + (PowFunctions.NAFSlideRL(num, pow, mod, window, out table).ToString())); OperationsResult.Update(); }
+                    if (OperationsList.CheckedIndices[i] == 9) { OperationsResult.Items.Add("NAF Slide LR\t: " + (PowFunctions.NAFSlideLR(num, pow, mod, window, out table).ToString())); OperationsResult.Update(); }
+                    if (OperationsList.CheckedIndices[i] == 10) { OperationsResult.Items.Add("NAF Window RL\t: " + (PowFunctions.NAFWindowRL(num, pow, mod, window, out table).ToString())); OperationsResult.Update(); }
+                    if (OperationsList.CheckedIndices[i] == 11) { OperationsResult.Items.Add("NAF Window LR\t: " + (PowFunctions.NAFWindowLR(num, pow, mod, window, out table).ToString())); OperationsResult.Update(); }
+                    if (OperationsList.CheckedIndices[i] == 12) { OperationsResult.Items.Add("wNAF Slide RL\t: " + (PowFunctions.wNAFSlideRL(num, pow, mod, window, out table).ToString())); OperationsResult.Update(); }
+                    if (OperationsList.CheckedIndices[i] == 13) { OperationsResult.Items.Add("wNAF Slide RL\t: " + (PowFunctions.wNAFSlideLR(num, pow, mod, window, out table).ToString())); OperationsResult.Update(); }
+                    if (OperationsList.CheckedIndices[i] == 14) { OperationsResult.Items.Add("Add Sub RL\t: " + (PowFunctions.AddSubRL(num, pow, mod).ToString())); OperationsResult.Update(); }
+                    if (OperationsList.CheckedIndices[i] == 15) { OperationsResult.Items.Add("Add Sub LR\t: " + (PowFunctions.AddSubLR(num, pow, mod).ToString())); OperationsResult.Update(); }
+                    if (OperationsList.CheckedIndices[i] == 16) { OperationsResult.Items.Add("Joye_double_and_add\t: " + (PowFunctions.Joye_double_and_add(num, pow, mod).ToString())); OperationsResult.Update(); }
+                    if (OperationsList.CheckedIndices[i] == 17) { OperationsResult.Items.Add("MontgomeryLadder\t: " + (PowFunctions.MontgomeryLadder(num, pow, mod).ToString())); OperationsResult.Update(); }
+
+
+                    if (OperationsList.CheckedIndices[i] == 18) { OperationsResult.Items.Add("DBNS1RL 1\t: " + (PowFunctions.DBNS1RL(num, pow, mod, true).ToString())); OperationsResult.Update(); }
+                    if (OperationsList.CheckedIndices[i] == 19) { OperationsResult.Items.Add("DBNS1RL 2\t: " + (PowFunctions.DBNS1RL(num, pow, mod, false).ToString())); OperationsResult.Update(); }
+                    if (OperationsList.CheckedIndices[i] == 20) { OperationsResult.Items.Add("DBNS1LR 1\t: " + (PowFunctions.DBNS1LR(num, pow, mod, true).ToString())); OperationsResult.Update(); }
+                    if (OperationsList.CheckedIndices[i] == 21) { OperationsResult.Items.Add("DBNS1LR 2\t: " + (PowFunctions.DBNS1LR(num, pow, mod, false).ToString())); OperationsResult.Update(); }
+
+                    if (OperationsList.CheckedIndices[i] == 22) { OperationsResult.Items.Add("DBNS2RL\t: " + (PowFunctions.DBNS2RL(num, pow, mod, PowFunctions.Euclid_2_1).ToString())); OperationsResult.Update(); }
+                    if (OperationsList.CheckedIndices[i] == 23) { OperationsResult.Items.Add("DBNS2LR\t: " + (PowFunctions.DBNS2LR(num, pow, mod, PowFunctions.Euclid_2_1).ToString())); OperationsResult.Update(); }
+                }
+            }
+        }
+        #endregion
+
+        #region CheckButtons
         private void CheckAllbutton_Click(object sender, EventArgs e)
         {
             for (int i = 0; i < OperationsList.Items.Count; i++)
             {
                  OperationsList.SetItemChecked(i, true); 
-                
             }
         }
 
@@ -328,7 +311,6 @@ namespace DigitsPower
             for (int i = 0; i < OperCheckList.Items.Count; i++)
             {
                 OperCheckList.SetItemChecked(i, false);
-
             }
         }
 
@@ -346,47 +328,12 @@ namespace DigitsPower
             for (int i = 0; i < OperCheckList.Items.Count; i++)
             {
                 OperCheckList.SetItemChecked(i, true);
-
             }
         }
 
-        private void FilePow_Click(object sender, EventArgs e)
-        {
+        #endregion
 
-        }
-
-        private void label13_Click_1(object sender, EventArgs e)
-        {
-
-        }
-
-        private void FoundDir_SelectedValueChanged(object sender, EventArgs e)
-        {
-            //textBox2.Text = FoundDir.SelectedItem.ToString();
-        }
-
-        private void DegreeDir_SelectedValueChanged(object sender, EventArgs e)
-        {
-           //textBox1.Text = DegreeDir.SelectedItem.ToString();
-        }
-
-        private void ModsDir_SelectedValueChanged(object sender, EventArgs e)
-        {
-            //textBox3.Text = ModsDir.SelectedItem.ToString();
-        }
-
-        //private void ResultList_DoubleClick(object sender, EventArgs e)
-        //{
-        //    var x = Directory.GetCurrentDirectory();
-        //    var p = x + @"\bin\Debug\Results";
-        //    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo()
-        //    {
-        //        FileName = p,
-        //        UseShellExecute = true,
-        //        Verb = "open"
-        //    });
-        //}
-
+        #region OpenDirectories
         private void ModsDir_DoubleClick(object sender, EventArgs e)
         {
             Process.Start(@"~\bin\Debug\Mods");
@@ -401,11 +348,25 @@ namespace DigitsPower
         {
             Process.Start(@"~\bin\Debug\Foudations");
         }
+
+
+        //private void ResultList_DoubleClick(object sender, EventArgs e)
+        //{
+        //    var x = Directory.GetCurrentDirectory();
+        //    var p = x + @"\bin\Debug\Results";
+        //    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo()
+        //    {
+        //        FileName = p,
+        //        UseShellExecute = true,
+        //        Verb = "open"
+        //    });
+        //}
+        #endregion
     }
     public static class AdditionalParameters
     {
-        public static Int64 A = 15;
-        public static Int64 B = 17;
+        public static long A = 15;
+        public static long B = 17;
         public static Inverse inv = PowFunctions.Euclid_2_1;
 
     }

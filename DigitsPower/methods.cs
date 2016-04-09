@@ -8,7 +8,29 @@ namespace DigitsPower
 {
     class methods
     {
+        //public static BigInteger Point_Multiplication_Affine_Coord_21(BigInteger found, BigInteger pow, BigInteger mod)
+        //{
+        //    List<int[]> mas_k = PowFunctions.ToDBNS2RL(pow);
 
+        //    BigInteger res = 1;
+        //    BigInteger t = found;
+
+
+
+        //    for (int i = 0; i < mas_k.Count; i++)
+        //    {
+        //        for (int j = 0; j < mas_k[i][1]; j++)
+        //            t = (t * t) % mod;
+        //        for (int j = 0; j < mas_k[i][2]; j++)
+        //            t = ((t * t) % mod * t) % mod;
+
+        //        if (mas_k[i][0] == 1)
+        //            res = res * t % mod;
+        //        else if (mas_k[i][0] == -1)
+        //            res = res * inv(t, mod) % mod;
+        //    }
+        //    return res;
+        //}
         public static BigInteger Point_Multiplication_Affine_Coord_19(BigInteger found, BigInteger pow, BigInteger mod, bool convert_method)
         {
             BigInteger[,] mas_k;

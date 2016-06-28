@@ -50,12 +50,18 @@
             this.label24 = new System.Windows.Forms.Label();
             this.groupBox12 = new System.Windows.Forms.GroupBox();
             this.label15 = new System.Windows.Forms.Label();
+            this.binAxis = new System.Windows.Forms.ComboBox();
             this.groupBox14 = new System.Windows.Forms.GroupBox();
+            this.label34 = new System.Windows.Forms.Label();
+            this.binAxis_3 = new System.Windows.Forms.ComboBox();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label33 = new System.Windows.Forms.Label();
+            this.binAxis_2 = new System.Windows.Forms.ComboBox();
+            this.binAxis_1 = new System.Windows.Forms.ComboBox();
             this.label28 = new System.Windows.Forms.Label();
-            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.textBmax = new System.Windows.Forms.TextBox();
             this.label29 = new System.Windows.Forms.Label();
-            this.textBox5 = new System.Windows.Forms.TextBox();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.textAmax = new System.Windows.Forms.TextBox();
             this.groupBox11 = new System.Windows.Forms.GroupBox();
             this.label27 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
@@ -216,7 +222,13 @@
             "20.1 DBNS 1.1 LR  (only for prime mod)",
             "20.2 DBNS 1.2 LR  (only for prime mod)",
             "21.DBNS 2 RL",
-            "22.DBNS 2 LR"});
+            "22.DBNS 2 LR",
+            "23.Window LR1",
+            "24.Window LR2",
+            "25.Window LR3",
+            "26.Window LR",
+            "25.Bonus1",
+            "26.Bonus2"});
             this.OperationsList.Location = new System.Drawing.Point(5, 19);
             this.OperationsList.Name = "OperationsList";
             this.OperationsList.Size = new System.Drawing.Size(399, 184);
@@ -358,11 +370,11 @@
             // groupBox12
             // 
             this.groupBox12.Controls.Add(this.label15);
+            this.groupBox12.Controls.Add(this.binAxis);
             this.groupBox12.Controls.Add(this.groupBox14);
-            this.groupBox12.Controls.Add(this.comboBox1);
             this.groupBox12.Location = new System.Drawing.Point(12, 6);
             this.groupBox12.Name = "groupBox12";
-            this.groupBox12.Size = new System.Drawing.Size(304, 182);
+            this.groupBox12.Size = new System.Drawing.Size(304, 229);
             this.groupBox12.TabIndex = 32;
             this.groupBox12.TabStop = false;
             this.groupBox12.Text = "Binary Methods";
@@ -370,71 +382,149 @@
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(10, 36);
+            this.label15.Location = new System.Drawing.Point(16, 22);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(62, 13);
             this.label15.TabIndex = 36;
             this.label15.Text = "Axis (Files) :";
             // 
+            // binAxis
+            // 
+            this.binAxis.FormattingEnabled = true;
+            this.binAxis.Items.AddRange(new object[] {
+            "Foundations",
+            "Degrees",
+            "Mods"});
+            this.binAxis.Location = new System.Drawing.Point(84, 19);
+            this.binAxis.Name = "binAxis";
+            this.binAxis.Size = new System.Drawing.Size(158, 21);
+            this.binAxis.TabIndex = 35;
+            this.binAxis.Text = "Foundations";
+            // 
             // groupBox14
             // 
+            this.groupBox14.Controls.Add(this.label34);
+            this.groupBox14.Controls.Add(this.binAxis_3);
+            this.groupBox14.Controls.Add(this.label14);
+            this.groupBox14.Controls.Add(this.label33);
+            this.groupBox14.Controls.Add(this.binAxis_2);
+            this.groupBox14.Controls.Add(this.binAxis_1);
             this.groupBox14.Controls.Add(this.label28);
-            this.groupBox14.Controls.Add(this.textBox4);
+            this.groupBox14.Controls.Add(this.textBmax);
             this.groupBox14.Controls.Add(this.label29);
-            this.groupBox14.Controls.Add(this.textBox5);
-            this.groupBox14.Location = new System.Drawing.Point(78, 93);
+            this.groupBox14.Controls.Add(this.textAmax);
+            this.groupBox14.Location = new System.Drawing.Point(6, 61);
             this.groupBox14.Name = "groupBox14";
-            this.groupBox14.Size = new System.Drawing.Size(158, 76);
+            this.groupBox14.Size = new System.Drawing.Size(294, 159);
             this.groupBox14.TabIndex = 33;
             this.groupBox14.TabStop = false;
             this.groupBox14.Text = "Parametrs for 19, 20";
             // 
+            // label34
+            // 
+            this.label34.AutoSize = true;
+            this.label34.Location = new System.Drawing.Point(32, 77);
+            this.label34.Name = "label34";
+            this.label34.Size = new System.Drawing.Size(88, 13);
+            this.label34.TabIndex = 43;
+            this.label34.Text = "Third axis (Files) :";
+            // 
+            // binAxis_3
+            // 
+            this.binAxis_3.FormattingEnabled = true;
+            this.binAxis_3.Items.AddRange(new object[] {
+            "Foundations",
+            "Degrees",
+            "Mods",
+            "aMax",
+            "bMax"});
+            this.binAxis_3.Location = new System.Drawing.Point(129, 74);
+            this.binAxis_3.Name = "binAxis_3";
+            this.binAxis_3.Size = new System.Drawing.Size(158, 21);
+            this.binAxis_3.TabIndex = 42;
+            this.binAxis_3.Text = "Mods";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(17, 22);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(103, 13);
+            this.label14.TabIndex = 40;
+            this.label14.Text = "First axis (Catalogs) :";
+            // 
+            // label33
+            // 
+            this.label33.AutoSize = true;
+            this.label33.Location = new System.Drawing.Point(0, 49);
+            this.label33.Name = "label33";
+            this.label33.Size = new System.Drawing.Size(121, 13);
+            this.label33.TabIndex = 41;
+            this.label33.Text = "Second axis (Catalogs) :";
+            // 
+            // binAxis_2
+            // 
+            this.binAxis_2.FormattingEnabled = true;
+            this.binAxis_2.Items.AddRange(new object[] {
+            "Foundations",
+            "Degrees",
+            "Mods",
+            "aMax",
+            "bMax"});
+            this.binAxis_2.Location = new System.Drawing.Point(129, 46);
+            this.binAxis_2.Name = "binAxis_2";
+            this.binAxis_2.Size = new System.Drawing.Size(158, 21);
+            this.binAxis_2.TabIndex = 39;
+            this.binAxis_2.Text = "Degrees";
+            // 
+            // binAxis_1
+            // 
+            this.binAxis_1.FormattingEnabled = true;
+            this.binAxis_1.Items.AddRange(new object[] {
+            "Foundations",
+            "Degrees",
+            "Mods",
+            "aMax",
+            "bMax"});
+            this.binAxis_1.Location = new System.Drawing.Point(129, 19);
+            this.binAxis_1.Name = "binAxis_1";
+            this.binAxis_1.Size = new System.Drawing.Size(158, 21);
+            this.binAxis_1.TabIndex = 37;
+            this.binAxis_1.Text = "Foundations";
+            // 
             // label28
             // 
             this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(16, 21);
+            this.label28.Location = new System.Drawing.Point(75, 104);
             this.label28.Name = "label28";
             this.label28.Size = new System.Drawing.Size(44, 13);
             this.label28.TabIndex = 18;
             this.label28.Text = "a_max :";
             // 
-            // textBox4
+            // textBmax
             // 
-            this.textBox4.Location = new System.Drawing.Point(63, 42);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(77, 20);
-            this.textBox4.TabIndex = 17;
-            this.textBox4.Text = "17";
+            this.textBmax.Location = new System.Drawing.Point(129, 127);
+            this.textBmax.Name = "textBmax";
+            this.textBmax.Size = new System.Drawing.Size(158, 20);
+            this.textBmax.TabIndex = 17;
+            this.textBmax.Text = "7-17";
             // 
             // label29
             // 
             this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(16, 45);
+            this.label29.Location = new System.Drawing.Point(75, 130);
             this.label29.Name = "label29";
             this.label29.Size = new System.Drawing.Size(44, 13);
             this.label29.TabIndex = 16;
             this.label29.Text = "b_max :";
             // 
-            // textBox5
+            // textAmax
             // 
-            this.textBox5.Location = new System.Drawing.Point(63, 16);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(77, 20);
-            this.textBox5.TabIndex = 15;
-            this.textBox5.Text = "15";
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
-            "Foundations",
-            "Degrees",
-            "Mods"});
-            this.comboBox1.Location = new System.Drawing.Point(78, 33);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(158, 21);
-            this.comboBox1.TabIndex = 35;
-            this.comboBox1.Text = "Foundations";
+            this.textAmax.Location = new System.Drawing.Point(129, 101);
+            this.textAmax.Name = "textAmax";
+            this.textAmax.Size = new System.Drawing.Size(158, 20);
+            this.textAmax.TabIndex = 15;
+            this.textAmax.Text = "5-15";
             // 
             // groupBox11
             // 
@@ -1232,10 +1322,10 @@
         private System.Windows.Forms.TextBox textA;
         private System.Windows.Forms.GroupBox groupBox14;
         private System.Windows.Forms.Label label28;
-        private System.Windows.Forms.TextBox textBox4;
+        private System.Windows.Forms.TextBox textBmax;
         private System.Windows.Forms.Label label29;
-        private System.Windows.Forms.TextBox textBox5;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.TextBox textAmax;
+        private System.Windows.Forms.ComboBox binAxis;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.ComboBox comboBox3;
@@ -1244,6 +1334,12 @@
         private System.Windows.Forms.Label label25;
         private System.Windows.Forms.ComboBox comboBox4;
         private System.Windows.Forms.Label label32;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label label33;
+        private System.Windows.Forms.ComboBox binAxis_2;
+        private System.Windows.Forms.ComboBox binAxis_1;
+        private System.Windows.Forms.Label label34;
+        private System.Windows.Forms.ComboBox binAxis_3;
     }
 }
 

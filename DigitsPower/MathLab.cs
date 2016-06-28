@@ -1,510 +1,378 @@
-﻿//#region 19
-//function [ x3, y3, z3 ] = Point_Multiplication_Affine_Coord_19 (x1, y1, z1, a, k, p)
+﻿//using System;
+//using System.Collections.Generic;
+//using System.Windows.Forms;
+//using System.Numerics;
+//using System.IO;
+//using System.Diagnostics;
+//using System.Threading.Tasks;
+//using System.Threading;
+
+////using System.Security.Cryptography;
+
+//namespace DigitsPower
+//{
+//    //1.Binary RL
+//    //2.Binary LR
+//    //3.Window RL
+//    //4.Window LR
+//    //5.Slide Window RL
+//    //6.Slide Window LR
+//    //7.1.NAF Binary RL
+//    //7.2.NAF Binary RL_2
+//    //8.NAF Binary LR
+//    //9.NAF Slide RL
+//    //10.NAF Slide LR
+//    //11.NAF Window RL
+//    //12.NAF Window LR
+//    //13.wNAF Slide RL
+//    //14.wNAF Slide LR
+//    //15.Add Sub RL
+//    //16.Add Sub LR
+//    //17.Joye double & add
+//    //18.Montgomery ladder
+//    //19.DBNS 1 RL
+//    //20.DBNS 1 LR
+//    //21.DBNS 2 RL
+//    //22.DBNS 2 LR
+
+//    public partial class MainForm : Form
+//    {
+//        string choice;
+//        string choicew;
+//        public MainForm()
+//        {
+//            InitializeComponent();
+//            CreateDirectories();
+//            Axis1Box.SelectedIndex = 0;
+//            Axis2Box.SelectedIndex = 1;
+//            tabControl1.SelectedIndex = 2;
+//        }
+
+//        #region InitializeMethods
+//        private void CreateDirectories()
+//        {
+//            string path = Directory.GetCurrentDirectory();
+
+//            try
+//            {
+//                Directory.CreateDirectory(path + "\\Foundations");
+//                Directory.CreateDirectory(path + "\\Degrees");
+//                Directory.CreateDirectory(path + "\\Mods");
+//                Directory.CreateDirectory(path + "\\Results");
+//                UpdateDirectoryList();
+//                OperCheckList.SetItemChecked(0, true);
+//                OperCheckList.SetItemChecked(1, true);
+//                if (FoundDir.Items.Count != 0)
+//                {
+//                    FoundDir.SelectedIndex = 0;
+//                }
+//                if (DegreeDir.Items.Count != 0)
+//                {
+//                    DegreeDir.SelectedIndex = 0;
+//                }
+//                if (ModsDir.Items.Count != 0)
+//                {
+//                    ModsDir.SelectedIndex = 0;
+//                }
+
+//            }
+//            catch (Exception err)
+//            {
+//                MessageBox.Show(err.Message, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+//            }
+//        }
+
+//        private void UpdateDirectoryList()
+//        {
+//            try
+//            {
+//                string path = Directory.GetCurrentDirectory();
+//                string[] dirs = Directory.GetDirectories(path + "\\Degrees");
+//                DegreesList.Items.Clear();
+//                DegreeDir.Items.Clear();
+//                foreach (string s in dirs)
+//                {
+//                    string[] dirs2 = s.Split('\\');
+//                    DegreesList.Items.Add(dirs2[dirs2.Length - 1]);
+//                    DegreeDir.Items.Add(dirs2[dirs2.Length - 1]);
+//                }
+//                dirs = Directory.GetDirectories(path + "\\Foundations");
+//                FoundationsList.Items.Clear();
+//                FoundDir.Items.Clear();
+//                foreach (string s in dirs)
+//                {
+//                    string[] dirs2 = s.Split('\\');
+//                    FoundationsList.Items.Add(dirs2[dirs2.Length - 1]);
+//                    FoundDir.Items.Add(dirs2[dirs2.Length - 1]);
+//                }
+
+//                dirs = Directory.GetDirectories(path + "\\Mods");
+//                ModsList.Items.Clear();
+//                ModsDir.Items.Clear();
+//                foreach (string s in dirs)
+//                {
+//                    string[] dirs2 = s.Split('\\');
+//                    ModsList.Items.Add(dirs2[dirs2.Length - 1]);
+//                    ModsDir.Items.Add(dirs2[dirs2.Length - 1]);
+//                }
+//                dirs = Directory.GetDirectories(path + "\\Results");
+//            }
+//            catch (Exception err)
+//            {
+//                MessageBox.Show(err.Message, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+//            }
+//        }
+//        #endregion
+
+//        #region GenerationMethods
+//        private void GenFile(GenFunctions.random_num func, string dir, string len, string count, string type, string radix)
+//        {
+//            string path = Directory.GetCurrentDirectory();
+//            var lenght = GenFunctions.ReadString(len);
+//            try
+//            {
+//                var di = Directory.CreateDirectory($"{path}\\{dir}\\{type}{lenght[0]}_{lenght[lenght.Count - 1]}_{count}({radix})#{DateTime.Now.ToLocalTime().ToString().Replace(':', '-')}");
+//                FileStream fin;
+//                for (int j = 0; j < lenght.Count; j++)
+//                {
+//                    path = di.FullName + "\\" + lenght[j] + ".txt";
+
+//                    fin = new FileStream(path, FileMode.Create, FileAccess.Write);
+//                    // Open the stream and read it back.
+//                    using (StreamWriter sr = new StreamWriter(fin))
+//                    {
+//                        for (int i = 0; i < Int32.Parse(count); i++)
+//                        {
+//                            sr.WriteLine(func(lenght[j], radix));
+//                        }
+//                    }
+//                    fin.Close();
+//                }
+//            }
+//            catch (Exception err)
+//            {
+//                MessageBox.Show(err.Message, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+//            }
+//            UpdateDirectoryList();
+//        }
+
+//        private void GenFound_Click(object sender, EventArgs e)
+//        {
+//            GenFile(GenFunctions.random_max, "Foundations", FoundLenght.Text, FoundCount.Text, "Found", comboBox2.Text);
+//        }
+
+//        private void GenDegree_Click(object sender, EventArgs e)
+//        {
+//            GenFile(GenFunctions.random_max, "Degrees", DegreeLenght.Text, DegreeCount.Text, "Degree", comboBox3.Text);
+//        }
+
+//        private void GenMod_Click(object sender, EventArgs e)
+//        {
+//            switch (ModType.Text)
+//            {
+//                case "Degree of 2":
+//                    GenFile(GenFunctions.random_two, "Mods", ModLenght.Text, ModCount.Text, "Mod_Degree of two_", comboBox4.Text);
+//                    break;
+//                case "Odd number":
+//                    GenFile(GenFunctions.random_odd, "Mods", ModLenght.Text, ModCount.Text, "Mod_Odd number_", comboBox4.Text);
+//                    break;
+//                case "Prime number":
+//                    GenFile(GenFunctions.random_simple, "Mods", ModLenght.Text, ModCount.Text, "Mod_Prime number_", comboBox4.Text);
+//                    break;
+//                default:
+//                    GenFile(GenFunctions.random_max, "Mods", ModLenght.Text, ModCount.Text, "Mod_Random number_", comboBox4.Text);
+//                    break;
+//            }
+
+//        }
+//        #endregion
+
+//        #region CalculateMethods
+//        private void ResultsButton_Click(object sender, EventArgs e)
+//        {
+//            ResultsButton.Enabled = false;
+//            AdditionalParameters.A = long.Parse(textBox5.Text);
+//            AdditionalParameters.B = long.Parse(textBox4.Text);
+
+//            choice = comboBox1.Text;
+
+//            if (Axis1Box.SelectedItem == Axis2Box.SelectedItem)
+//            {
+//                MessageBox.Show("You must select two different axis!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+//                return;
+//            }
+//            choicew = Axis1Box.SelectedItem + " " + Axis2Box.SelectedItem;
+//            if (OperCheckList.CheckedIndices.Count > 0)
+//            {
+//                (new Thread(GetResults)).Start();
+//            }
+//        }
+
+//        private void GetResults()
+//        {
+//            for (int i = 0; i < OperCheckList.CheckedIndices.Count; i++)
+//            {
+//                #region Binary
+//                if (OperCheckList.CheckedIndices[i] == 0) { (new BinaryRL(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choice)).Create_Result(); }
+//                if (OperCheckList.CheckedIndices[i] == 1) { (new BinaryLR(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choice)).Create_Result(); }
+//                if (OperCheckList.CheckedIndices[i] == 6) { (new NAFBinaryRL(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choice)).Create_Result(); }
+//                if (OperCheckList.CheckedIndices[i] == 7) { (new NAFBinaryLR(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choice)).Create_Result(); }
+//                if (OperCheckList.CheckedIndices[i] == 14) { (new AddSubRL(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choice)).Create_Result(); }
+//                if (OperCheckList.CheckedIndices[i] == 15) { (new AddSubLR(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choice)).Create_Result(); }
+//                if (OperCheckList.CheckedIndices[i] == 16) { (new Joye_double_and_add(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choice)).Create_Result(); }
+//                if (OperCheckList.CheckedIndices[i] == 17) { (new MontgomeryLadder(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choice)).Create_Result(); }
+//                if (OperCheckList.CheckedIndices[i] == 18) { (new DBNS1RL(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choice, true)).Create_Result(); }
+//                if (OperCheckList.CheckedIndices[i] == 19) { (new DBNS1RL(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choice, false)).Create_Result(); }
+//                if (OperCheckList.CheckedIndices[i] == 20) { (new DBNS1LR(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choice, true)).Create_Result(); }
+//                if (OperCheckList.CheckedIndices[i] == 21) { (new DBNS1LR(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choice, false)).Create_Result(); }
+//                if (OperCheckList.CheckedIndices[i] == 22) { (new DBNS2RL(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choice)).Create_Result(); }
+//                if (OperCheckList.CheckedIndices[i] == 23) { (new DBNS2RL(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choice)).Create_Result(); }
+//                #endregion
+
+//                #region Window
+//                if (OperCheckList.CheckedIndices[i] == 2) { (new WindowRL()).Create_Result(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choicew, WinMode.Text, TableWith.Checked); }
+//                if (OperCheckList.CheckedIndices[i] == 3) { (new WindowLR()).Create_Result(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choicew, WinMode.Text, TableWith.Checked); }
+//                if (OperCheckList.CheckedIndices[i] == 4) { (new SlideRL()).Create_Result(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choicew, WinMode.Text, TableWith.Checked); }
+//                if (OperCheckList.CheckedIndices[i] == 5) { (new SlideRL()).Create_Result(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choicew, WinMode.Text, TableWith.Checked); }
+//                if (OperCheckList.CheckedIndices[i] == 8) { (new NAFSlideRL()).Create_Result(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choicew, WinMode.Text, TableWith.Checked); }
+//                if (OperCheckList.CheckedIndices[i] == 9) { (new NAFSlideLR()).Create_Result(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choicew, WinMode.Text, TableWith.Checked); }
+//                if (OperCheckList.CheckedIndices[i] == 10) { (new NAFWindowRL()).Create_Result(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choicew, WinMode.Text, TableWith.Checked); }
+//                if (OperCheckList.CheckedIndices[i] == 11) { (new NAFWindowLR()).Create_Result(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choicew, WinMode.Text, TableWith.Checked); }
+//                if (OperCheckList.CheckedIndices[i] == 12) { (new wNAFSlideRL()).Create_Result(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choicew, WinMode.Text, TableWith.Checked); }
+//                if (OperCheckList.CheckedIndices[i] == 13) { (new wNAFSlideLR()).Create_Result(FoundDir.SelectedItem.ToString(), DegreeDir.SelectedItem.ToString(), ModsDir.SelectedItem.ToString(), choicew, WinMode.Text, TableWith.Checked); }
+//                #endregion
+
+//            }
+
+//            string path = Directory.GetCurrentDirectory();
+//            string[] dirs = Directory.GetDirectories(path + "\\Results");
+//            var result = MessageBox.Show("All done", "Result",
+//                                         MessageBoxButtons.OK,
+//                                         MessageBoxIcon.Information);
+//            ResultsButton.Enabled = true;
+//        }
+
+//        private void Calculatebutton_Click(object sender, EventArgs e)
+//        {
+//            AdditionalParameters.A = Int64.Parse(textA.Text);
+//            AdditionalParameters.B = Int64.Parse(textB.Text);
+
+//            BigInteger mod = BigInteger.Parse(modText.Text);
+//            BigInteger pow = BigInteger.Parse(PowerText.Text);
+//            int window = Int32.Parse(WindowText.Text);
+//            BigInteger num = BigInteger.Parse(NumberText.Text);
+//            List<string> s = new List<string>();
+//            double table = 0;
+//            OperationsResult.Items.Clear();
+
+//            if (OperationsList.CheckedIndices.Count > 0)
+//            {
+//                for (int i = 0; i < OperationsList.CheckedIndices.Count; i++)
+//                {
+
+//                    if (OperationsList.CheckedIndices[i] == 0) { OperationsResult.Items.Add("Binary RL\t: " + (PowFunctions.BinaryRL(num, pow, mod)).ToString()); OperationsResult.Update(); }
+//                    if (OperationsList.CheckedIndices[i] == 1) { OperationsResult.Items.Add("Binary LR\t: " + (PowFunctions.BinaryLR(num, pow, mod)).ToString()); OperationsResult.Update(); }
+//                    if (OperationsList.CheckedIndices[i] == 2) { OperationsResult.Items.Add("Window RL\t: " + (PowFunctions.WindowRL(num, pow, mod, window, out table)).ToString()); OperationsResult.Update(); }
+//                    if (OperationsList.CheckedIndices[i] == 3) { OperationsResult.Items.Add("Window LR\t: " + (PowFunctions.WindowLR(num, pow, mod, window, out table)).ToString()); OperationsResult.Update(); }
+//                    if (OperationsList.CheckedIndices[i] == 4) { OperationsResult.Items.Add("Slide RL\t\t: " + (PowFunctions.SlideRL(num, pow, mod, window, out table)).ToString()); OperationsResult.Update(); }
+//                    if (OperationsList.CheckedIndices[i] == 5) { OperationsResult.Items.Add("Slide LR\t\t: " + (PowFunctions.SlideLR(num, pow, mod, window, out table)).ToString()); OperationsResult.Update(); }
+//                    if (OperationsList.CheckedIndices[i] == 6) { OperationsResult.Items.Add("NAF Binary RL\t: " + (PowFunctions.NAFBinaryRL(num, pow, mod).ToString())); OperationsResult.Update(); }
+//                    if (OperationsList.CheckedIndices[i] == 7) { OperationsResult.Items.Add("NAF Binary LR\t: " + (PowFunctions.NAFBinaryLR(num, pow, mod).ToString())); OperationsResult.Update(); }
+//                    if (OperationsList.CheckedIndices[i] == 8) { OperationsResult.Items.Add("NAF Slide RL\t: " + (PowFunctions.NAFSlideRL(num, pow, mod, window, out table).ToString())); OperationsResult.Update(); }
+//                    if (OperationsList.CheckedIndices[i] == 9) { OperationsResult.Items.Add("NAF Slide LR\t: " + (PowFunctions.NAFSlideLR(num, pow, mod, window, out table).ToString())); OperationsResult.Update(); }
+//                    if (OperationsList.CheckedIndices[i] == 10) { OperationsResult.Items.Add("NAF Window RL\t: " + (PowFunctions.NAFWindowRL(num, pow, mod, window, out table).ToString())); OperationsResult.Update(); }
+//                    if (OperationsList.CheckedIndices[i] == 11) { OperationsResult.Items.Add("NAF Window LR\t: " + (PowFunctions.NAFWindowLR(num, pow, mod, window, out table).ToString())); OperationsResult.Update(); }
+//                    if (OperationsList.CheckedIndices[i] == 12) { OperationsResult.Items.Add("wNAF Slide RL\t: " + (PowFunctions.wNAFSlideRL(num, pow, mod, window, out table).ToString())); OperationsResult.Update(); }
+//                    if (OperationsList.CheckedIndices[i] == 13) { OperationsResult.Items.Add("wNAF Slide RL\t: " + (PowFunctions.wNAFSlideLR(num, pow, mod, window, out table).ToString())); OperationsResult.Update(); }
+//                    if (OperationsList.CheckedIndices[i] == 14) { OperationsResult.Items.Add("Add Sub RL\t: " + (PowFunctions.AddSubRL(num, pow, mod).ToString())); OperationsResult.Update(); }
+//                    if (OperationsList.CheckedIndices[i] == 15) { OperationsResult.Items.Add("Add Sub LR\t: " + (PowFunctions.AddSubLR(num, pow, mod).ToString())); OperationsResult.Update(); }
+//                    if (OperationsList.CheckedIndices[i] == 16) { OperationsResult.Items.Add("Joye_double_and_add\t: " + (PowFunctions.Joye_double_and_add(num, pow, mod).ToString())); OperationsResult.Update(); }
+//                    if (OperationsList.CheckedIndices[i] == 17) { OperationsResult.Items.Add("MontgomeryLadder\t: " + (PowFunctions.MontgomeryLadder(num, pow, mod).ToString())); OperationsResult.Update(); }
 
 
-//    a_max = 15;
-//    b_max = 17;
-//    mas_k = zeros(1,3);
-//    [ mas_k ] = Convert_to_DBNS_1 (k, a_max, b_max);
-//%     [ mas_k ] = Convert_to_DBNS_2 (k, a_max, b_max);
-    
-//    % перевіримо чи правильно виконали розкладення
-//    sum = 0;
-//    s = size(mas_k);
-//    for i = 1:s(1)
-//        sum = sum + mas_k(i,1)*2^mas_k(i,2)*3^mas_k(i,3);
-//    end;
-    
-//    mas_k
-//    if (k ~= sum)
-//        disp('ALERT');
-//    end
+//                    if (OperationsList.CheckedIndices[i] == 18) { OperationsResult.Items.Add("DBNS1RL 1\t: " + (PowFunctions.DBNS1RL(num, pow, mod, true).ToString())); OperationsResult.Update(); }
+//                    if (OperationsList.CheckedIndices[i] == 19) { OperationsResult.Items.Add("DBNS1RL 2\t: " + (PowFunctions.DBNS1RL(num, pow, mod, false).ToString())); OperationsResult.Update(); }
+//                    if (OperationsList.CheckedIndices[i] == 20) { OperationsResult.Items.Add("DBNS1LR 1\t: " + (PowFunctions.DBNS1LR(num, pow, mod, true).ToString())); OperationsResult.Update(); }
+//                    if (OperationsList.CheckedIndices[i] == 21) { OperationsResult.Items.Add("DBNS1LR 2\t: " + (PowFunctions.DBNS1LR(num, pow, mod, false).ToString())); OperationsResult.Update(); }
 
-   
-//    t = size(mas_k);
-    
-//    x2 = x1;
-//    y2 = y1;
-//    z2 = z1;
-    
-//    for j = 1:mas_k(t(1),3)
-//        [ x2, y2, z2 ] = Ternary_Affine_Coord_2 (x2, y2, z2, a, p);
-//    end;
-    
-//    for j = 1:mas_k(t(1),2)
-//        [ x2, y2, z2 ] = Double_Affine_Coord (x2, y2, z2, a, p);
-//    end;
-    
-//    x3 = x2;
-//    y3 = mas_k(t(1),1)*y2;
-//    z3 = z2;
-        
-//    for i = t(1)-1:-1:1
-//        u = mas_k(i, 2) - mas_k(i + 1, 2);
-//        v = mas_k(i, 3) - mas_k(i + 1, 3);
-        
-//        for j = 1:u
-//            [ x2, y2, z2 ] = Double_Affine_Coord (x2, y2, z2, a, p);
-//        end;
-        
-//        for j = 1:v
-//            [ x2, y2, z2 ] = Ternary_Affine_Coord_2 (x2, y2, z2, a, p);
-//        end;
-        
-//        [ x3, y3, z3 ] = Add_Affine_Coord (x2, mas_k(i,1)*y2, z2, x3, y3, z3, a, p);
-//    end;
+//                    if (OperationsList.CheckedIndices[i] == 22) { OperationsResult.Items.Add("DBNS2RL\t: " + (PowFunctions.DBNS2RL(num, pow, mod, PowFunctions.Euclid_2_1).ToString())); OperationsResult.Update(); }
+//                    if (OperationsList.CheckedIndices[i] == 23) { OperationsResult.Items.Add("DBNS2LR\t: " + (PowFunctions.DBNS2LR(num, pow, mod, PowFunctions.Euclid_2_1).ToString())); OperationsResult.Update(); }
+//                }
+//            }
+//        }
+//        #endregion
 
-    
-//    if ~x3 && y3
-//        z3 = 0;
-//    else
-//        z3 = 1;
-//    end;
-    
-//end
+//        #region CheckButtons
+//        private void CheckAllbutton_Click(object sender, EventArgs e)
+//        {
+//            for (int i = 0; i < OperationsList.Items.Count; i++)
+//            {
+//                OperationsList.SetItemChecked(i, true);
+//            }
+//        }
 
+//        private void CheckNone_Click(object sender, EventArgs e)
+//        {
+//            for (int i = 0; i < OperCheckList.Items.Count; i++)
+//            {
+//                OperCheckList.SetItemChecked(i, false);
+//            }
+//        }
 
+//        private void CheckNonebutton_Click(object sender, EventArgs e)
+//        {
+//            for (int i = 0; i < OperationsList.Items.Count; i++)
+//            {
+//                OperationsList.SetItemChecked(i, false);
 
-//function [ mas_k ] = Convert_to_DBNS_1 (k, a_max, b_max)
+//            }
+//        }
 
-//    i = 0;
-//    s = 1;    
-//    while k > 0
-//        i = i + 1;
-//        [ a, b ] = Best_Approximation_1 (k, a_max, b_max);
-                         
-//        a_max = a;
-//        b_max = b;
-//        z = 2^a * 3^b;
-//        mas_k(i, 1) = s;
-//        mas_k(i, 2) = a;
-//        mas_k(i, 3) = b;
-        
-//        if k < z
-//            s = -s;
-//        end;
-        
-//        k = abs(k - z);      
-//    end;
+//        private void button2_Click(object sender, EventArgs e)
+//        {
+//            for (int i = 0; i < OperCheckList.Items.Count; i++)
+//            {
+//                OperCheckList.SetItemChecked(i, true);
+//            }
+//        }
 
-//end
+//        #endregion
 
-//function [ mas_k ] = Convert_to_DBNS_2 (k, a_max, b_max)
+//        #region OpenDirectories
+//        private void ModsDir_DoubleClick(object sender, EventArgs e)
+//        {
+//            Process.Start(@"~\bin\Debug\Mods");
+//        }
 
-//    i = 0;
-//    s = 1;    
-//    while k > 0
-//        i = i + 1;
-//        [ a, b ] = Best_Approximation_2 (k, a_max, b_max);
-                         
-//        a_max = a;
-//        b_max = b;
-//        z = 2^a * 3^b;
-//        mas_k(i, 1) = s;
-//        mas_k(i, 2) = a;
-//        mas_k(i, 3) = b;
-        
-//        if k < z
-//            s = -s;
-//        end;
-        
-//        k = abs(k - z);      
-//    end;
+//        private void DegreeDir_DoubleClick(object sender, EventArgs e)
+//        {
+//            Process.Start(@"~\bin\Debug\Degrees");
+//        }
 
-//end
+//        private void FoundDir_DoubleClick(object sender, EventArgs e)
+//        {
+//            Process.Start(@"~\bin\Debug\Foudations");
+//        }
 
 
+//        //private void ResultList_DoubleClick(object sender, EventArgs e)
+//        //{
+//        //    var x = Directory.GetCurrentDirectory();
+//        //    var p = x + @"\bin\Debug\Results";
+//        //    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo()
+//        //    {
+//        //        FileName = p,
+//        //        UseShellExecute = true,
+//        //        Verb = "open"
+//        //    });
+//        //}
+//        #endregion
+//    }
+//    public static class AdditionalParameters
+//    {
+//        public static long A = 15;
+//        public static long B = 17;
+//        public static Inverse inv = PowFunctions.Euclid_2_1;
 
-//function [ a, b ] = Best_Approximation_1 (k, a_max, b_max)
-
-//    min_x = a_max;
-//    y = round(-min_x * log_dif_base(3, 2) + log_dif_base(3, k));
-    
-//    if y > b_max
-//        y = b_max;
-//    elseif (y < 0)
-//        y = 0;
-//    end;
-//    min_delta = abs(y + min_x * log_dif_base(3, 2) - log_dif_base(3, k));
-    
-//    for x = 0:a_max
-//        y = round(-x * log_dif_base(3, 2) + log_dif_base(3, k));
-//        if y > b_max
-//            y = b_max;
-//        elseif (y < 0)
-//            y = 0;
-//        end;
-        
-//        delta = abs(y + x * log_dif_base(3, 2) - log_dif_base(3, k));
-//        if min_delta > delta
-//            min_x = x;
-//            min_delta = delta;
-//        end;
-//    end;
-    
-//    a = min_x;
-//    b = round(-min_x * log_dif_base(3, 2) + log_dif_base(3, k));
-//    if b > b_max
-//        b = b_max;
-//    end;
-
-//end
-
-//function [ a, b ] = Best_Approximation_2 (k, a_max, b_max)
-
-//    % цей алгоритм написаний за ідеями запропонованими у презентації
-//    % Christophe Doche (Double-Base Number Systems and Applications), але
-//    % деякі моменти було запропоновано мною
-//    legth_k = get_number_bit(k, 2);
-//    PreComputation = zeros(b_max + 1, 3);
-//    for i = 0:b_max
-//        PreComputation(i+1, 1) = i;
-//        PreComputation(i+1, 2) = 3^i;
-//        temp = get_number_bit(PreComputation(i+1, 2), 2);
-//        PreComputation(i+1, 3) = bitshift(PreComputation(i+1, 2), legth_k - temp);
-//    end;
-    
-//    % сортування PreComputation за останнім стовпцем (як в презентації)
-//    for i = 1:b_max+1
-//        imin = i;
-//        min = PreComputation(i, 3);
-//        for j = i+1:b_max+1
-//            if min > PreComputation(j, 3)
-//                imin = j;
-//                min = PreComputation(j, 3);                
-//            end;
-//        end;
-        
-//        for j = 1:3
-//            temp = PreComputation(imin, j);
-//            PreComputation(imin, j) = PreComputation(i, j);
-//            PreComputation(i, j) = temp;
-//        end;        
-//    end;
-    
-//    i = b_max + 1;
-//    length_1 = 0;
-//    length_max = 0;
-//    while i > 0 && length_1 >= length_max
-//        j = legth_k;
-//        length_max = length_1;
-//        while j > 0 && bitget(PreComputation(i, 3),j) == bitget(k,j)
-//            j = j - 1;
-//        end;
-        
-//        length_1 = legth_k - j;
-//        i = i - 1;
-//    end;
-    
-//    if length_1 < length_max
-//        i = i + 2;
-//    else
-//        i = 1;
-//    end;
-    
-//    b1 = PreComputation(i, 1);
-//    a1 = legth_k - get_number_bit(PreComputation(i, 2), 2);
-    
-//    if a1 < 0
-//        a1 = 0;
-//    end;
-    
-//    % якщо максимальне співпадіння по бітах трапилось не на останньому
-//    % елементі масиву, то розглянути елемент на 1 старший від обраного,
-//    % оскільки обраний елемент b дає наближення з недостачею, а старший за
-//    % нього з надлишком
-//    if i < b_max+1
-//        b2 = PreComputation(i+1, 1);
-//        a2 = legth_k - get_number_bit(PreComputation(i+1, 2), 2);    
-//        if a2 < 0
-//            a2 = 0;
-//        end;
-//    else
-//        b2 = 0;
-//        a2 = 0;
-//    end;
-    
-//    % якщо обране значення а є більшим за максимально допустиме, то
-//    % встановити поточне значення а як максимально допустиме та змінити
-//    % відповідним чином значення b
-//    [ a1, b1 ] = Re_Compute_a_b(a1, b1, a_max, b_max, k);    
-//    [ a2, b2 ] = Re_Compute_a_b(a2, b2, a_max, b_max, k);
-    
-//    % визначити яка з пар показників степеня дає краще наближення
-//    if abs(k - 2^a1*3^b1) < abs(k - 2^a2*3^b2)
-//        a = a1;
-//        b = b1;
-//    else
-//        a = a2;
-//        b = b2;
-//    end;
-    
-//    % обране значення a дає наближення з недостачею, перевірити чи дасть
-//    % краще наближення з надлишком наступне значення a
-//    if a ~= a_max && abs(k - 2^(a+1)*3^b) < abs(k - 2^a*3^b)
-//        a = a + 1;
-//    end;
-    
-//end
-
-
-
-
-
-//function [ value ] = log_dif_base (base, argument)
-
-//    value = log(argument) / log(base);
-
-//end
-
-//function [ number_bit ] = get_number_bit (value, base)
-
-//    number_bit = floor(log_dif_base(base, value));
-//    if log_dif_base(base, value) > number_bit || ~number_bit
-//        number_bit = number_bit + 1;
-//    end;
-
-//end
-
-//function [ a, b ] = Re_Compute_a_b(a, b, a_max, b_max, k)
-
-//    if a > a_max
-//        temp = get_number_bit(2^(a - a_max), 3) - 1;
-//        b = b + temp;
-        
-//        if b > b_max
-//            b = b_max;
-//        end;
-        
-//        if a_max > 0
-//            temp = a_max - 1;
-//        else
-//            temp = 0;
-//        end;
-        
-//        if abs(k - 2^a_max*3^b) < abs(k - 2^temp*3^(b + 1)) || b == b_max
-//            a = a_max;
-//        else
-//            a = temp;
-//            b = b + 1;
-//        end;            
-//    end;
-
-//end
-
-//#endregion
-//#region 20
-
-//function [ x2, y2, z2 ] = Point_Multiplication_Affine_Coord_20 (x1, y1, z1, a, k, p)
-
-
-//    a_max = 15;
-//    b_max = 17;
-//    mas_k = zeros(1,3);
-//%     [ mas_k ] = Convert_to_DBNS_1 (k, a_max, b_max);
-//    [ mas_k ] = Convert_to_DBNS_2 (k, a_max, b_max);
-    
-//    % перевіримо чи правильно виконали розкладення
-//    sum = 0;
-//    s = size(mas_k);
-//    for i = 1:s(1)
-//        sum = sum + mas_k(i,1)*2^mas_k(i,2)*3^mas_k(i,3);
-//    end;
-    
-//    if (k ~= sum)
-//        disp('ALERT');
-//    end
-
-   
-//    x2 = x1;
-//    y2 = mas_k(1,1)*y1;
-//    z2 = z1;
-        
-//    for i = 1:s(1)-1
-//        u = mas_k(i, 2) - mas_k(i + 1, 2);
-//        v = mas_k(i, 3) - mas_k(i + 1, 3);
-        
-//        for j = 1:u
-//            [ x2, y2, z2 ] = Double_Affine_Coord (x2, y2, z2, a, p);
-//        end;
-        
-//        for j = 1:v
-//            [ x2, y2, z2 ] = Ternary_Affine_Coord (x2, y2, z2, a, p);
-//        end;
-        
-//        [ x2, y2, z2 ] = Add_Affine_Coord (x1, mas_k(i + 1,1)*y1, z1, x2, y2, z2, a, p);
-//    end;
-    
-    
-//    for j = 1:mas_k(s(1), 2)
-//        [ x2, y2, z2 ] = Double_Affine_Coord (x2, y2, z2, a, p);
-//    end;
-    
-//    for j = 1:mas_k(s(1), 3)
-//        [ x2, y2, z2 ] = Ternary_Affine_Coord (x2, y2, z2, a, p);
-//    end;
-    
-    
-//    if ~x2 && y2
-//        z2 = 0;
-//    else
-//        z2 = 1;
-//    end;
-    
-//end
-
-//#endregion
-//#region 21
-
-//function [ x3, y3, z3 ] = Point_Multiplication_Affine_Coord_21 (x1, y1, z1, a, k, p)
-
-
-//    mas_k = zeros(1,3);
-//    [ mas_k ] = Convert_to_DBNS (k);
-    
-//    % перевіримо чи правильно виконали розкладення
-//    sum = 0;
-//    temp = 1;
-//    s = size(mas_k);
-//    for i = 1:s(1)
-//        temp = temp * 2^mas_k(i,2)*3^mas_k(i,3);
-//        sum = sum + mas_k(i,1)*temp;
-//    end;
-    
-//    if (k ~= sum)
-//        disp('ALERT');
-//    end
-
-    
-//    x3 = 0;
-//    y3 = 1;
-//    z3 = 0;
-        
-//    for i = 1:s(1)
-        
-//        for j = 1:mas_k(i,2)
-//            [ x1, y1, z1 ] = Double_Affine_Coord (x1, y1, z1, a, p);
-//        end;
-        
-//        for j = 1:mas_k(i,3)
-//            [ x1, y1, z1 ] = Ternary_Affine_Coord_1 (x1, y1, z1, a, p);
-//        end;
-        
-//        [ x3, y3, z3 ] = Add_Affine_Coord (x1, mas_k(i,1)*y1, z1, x3, y3, z3, a, p);
-        
-//    end;
-    
-    
-//    if ~x3 && y3
-//        z3 = 0;
-//    else
-//        z3 = 1;
-//    end;
-    
-//end
-
-
-
-
-
-//function [ mas_k ] = Convert_to_DBNS (k)
-
-//    i = 1;
-//    value = k;
-//    while value
-        
-//        a = 0;
-//        while ~mod(value,2) && value
-//            a = a + 1;
-//            value = value / 2;
-//        end;
-        
-//        b = 0;
-//        while ~mod(value,3) && value
-//            b = b + 1;
-//            value = value / 3;
-//        end;
-        
-        
-//        mas_k(i, 2) = a;
-//        mas_k(i, 3) = b;
-        
-//        value = value - 1;
-//        if value
-//            if mod(value, 6)
-//                value = value + 2;
-//                mas_k(i, 1) = -1;
-//            else
-//                mas_k(i, 1) = 1;
-//            end;
-//        else
-//            mas_k(i, 1) = 1;
-//        end;
-        
-//        i = i + 1;
-        
-//    end;
-   
-//end
-
-
-
-//#endregion
-//#region 22
-
-//function [ x2, y2, z2 ] = Point_Multiplication_Affine_Coord_22 (x1, y1, z1, a, k, p)
-
-
-//    mas_k = zeros(1,3);
-//    [ mas_k ] = Convert_to_DBNS (k);
-    
-//    % перевіримо чи правильно виконали розкладення
-//    sum = 1;
-//    s = size(mas_k);
-//    for i = s(1):-1:1
-//        sum = sum * 2^mas_k(i,2)*3^mas_k(i,3) + mas_k(i,1);
-//    end;
-
-    
-//    if (k ~= sum)
-//        disp('ALERT');
-//    end
-
-   
-//    x2 = x1;
-//    y2 = y1;
-//    z2 = z1;
-        
-//    for i = s(1):-1:2
-        
-//        for j = 1:mas_k(i,2)
-//            [ x2, y2, z2 ] = Double_Affine_Coord (x2, y2, z2, a, p);
-//        end;
-        
-//        for j = 1:mas_k(i,3)
-//            [ x2, y2, z2 ] = Ternary_Affine_Coord_1 (x2, y2, z2, a, p);
-//        end;
-        
-//        [ x2, y2, z2 ] = Add_Affine_Coord (x1, mas_k(i,1)*y1, z1, x2, y2, z2, a, p);
-        
-//    end;
-    
-    
-//    for j = 1:mas_k(1,2)
-//        [ x2, y2, z2 ] = Double_Affine_Coord (x2, y2, z2, a, p);
-//    end;
-    
-//    for j = 1:mas_k(1,3)
-//        [ x2, y2, z2 ] = Ternary_Affine_Coord (x2, y2, z2, a, p);
-//    end;
-    
-    
-//    if ~x2 && y2
-//        z2 = 0;
-//    else
-//        z2 = 1;
-//    end;
-    
-//end
-
-//#endregion
+//    }
+//}

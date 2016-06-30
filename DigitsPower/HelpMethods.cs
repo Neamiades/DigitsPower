@@ -16,11 +16,6 @@ namespace DigitsPower
             return (a * b) % m;
         }
 
-        public static BigInteger MontgomeryMultiply(BigInteger a, BigInteger b, BigInteger m)
-        {
-            return MontgomeryMult(a, b, m);
-        }
-
         #endregion
         #region BinaryMethods
         //public static BigInteger Point_Multiplication_Affine_Coord_21(BigInteger found, BigInteger pow, BigInteger mod)
@@ -599,7 +594,7 @@ namespace DigitsPower
             for (int i = 0; i < OperationsList.CheckedIndices.Count; i++)
             {
                 #region Binary
-                if (OperationsList.CheckedIndices[i] == 0) { OperationsResult.Items.Add("Binary RL\t: " + (PowFunctions.BinaryRL(num, pow, mod, Euclid_2_1, MontgomeryMult)).ToString()); OperationsResult.Update(); }
+                if (OperationsList.CheckedIndices[i] == 0) { OperationsResult.Items.Add("Binary RL\t: " + (PowFunctions.BinaryRL(num, pow, mod, Euclid_2_1, SimpleMultiply)).ToString()); OperationsResult.Update(); }
                 if (OperationsList.CheckedIndices[i] == 1) { OperationsResult.Items.Add("Binary LR\t: " + (PowFunctions.BinaryLR(num, pow, mod, Euclid_2_1, SimpleMultiply)).ToString()); OperationsResult.Update(); }
                 if (OperationsList.CheckedIndices[i] == 6) { OperationsResult.Items.Add("NAF Binary RL\t: " + (PowFunctions.NAFBinaryRL(num, pow, mod, Euclid_2_1, SimpleMultiply).ToString())); OperationsResult.Update(); }
                 if (OperationsList.CheckedIndices[i] == 7) { OperationsResult.Items.Add("NAF Binary LR\t: " + (PowFunctions.NAFBinaryLR(num, pow, mod, Euclid_2_1, SimpleMultiply).ToString())); OperationsResult.Update(); }

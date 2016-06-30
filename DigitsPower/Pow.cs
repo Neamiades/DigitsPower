@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using System.Diagnostics;
 using static DigitsPower.HelpMethods;
 using static System.Math;
+using static DigitsPower.MontgomeryMethods;
 
 namespace DigitsPower
 {
@@ -32,16 +33,22 @@ namespace DigitsPower
 
         public static BigInteger BinaryRL(BigInteger found, BigInteger pow, BigInteger mod, Inverse inv, Multiply mul)
         {
-            BigInteger res = 1;
-            BigInteger t = found;
+            BigInteger res, t, inverse;
+            res = 1;
+            t = found;
+
+            inverse = toMontgomeryDomain(ref t, ref res, mod);
 
             string Binary = ConvToBinary(pow);
             for (int i = Binary.Length - 1; i >= 0; i--)
             {
                 if (Binary[i] == '1')
-                    res = mul(t, res, mod);//Приведення до степеня після кожного кроку
-                t = mul(t, t, mod);
+                    res = MontgomeryMultDomain(t, res, mod, inverse);//Приведення до степеня після кожного кроку
+                t = MontgomeryMultDomain(t, t, mod, inverse);
             }
+
+            res = outMontgomeryDomain(res, mod, inverse);
+
             return res;
         }
 
@@ -298,7 +305,7 @@ namespace DigitsPower
         public static BigInteger Bonus1()
         {
             BigInteger found, pow, mod;
-
+            found = pow = mod = 0;
             BigInteger res = 1;
             BigInteger t = found;
 
@@ -320,8 +327,8 @@ namespace DigitsPower
             for (int i = Binary.Length - 1; i >= 0; i--)
             {
                 if (Binary[i] == '1')
-                    res = mul(t, res, mod);//Приведення до степеня після кожного кроку
-                t = mul(t, t, mod);
+                    res = t * res * mod;//Приведення до степеня після кожного кроку
+                t = t * t * mod;
             }
             return res;
         }
@@ -386,8 +393,7 @@ namespace DigitsPower
 
         public static BigInteger WindowLRMod1(BigInteger found, BigInteger pow, BigInteger mod, int w, out double table_time, Inverse inv, Multiply mul)
         {
-            long i;
-            int t;
+            int i, t, pow_bin_len;
             Stopwatch stw;
             BigInteger res;
             BigInteger[] table;
@@ -398,39 +404,47 @@ namespace DigitsPower
             table = new BigInteger[w];
             table[0] = (found);
             for (i = 1; i < w; i++)
-                //table[i] = (2 * table[i - 1]);
-                table[i] = table[i - 1] * table[i - 1];
+                table[i] = mul(table[i - 1], table[i - 1], mod);
             stw.Stop();
             table_time = stw.Elapsed.TotalMilliseconds;
 
-            pow_bin = ConvToBinary(pow);
+            pow_bin = Reverse(ConvToBinary(pow));
+            pow_bin_len = pow_bin.Length;
             res = 1;
-            i = (long)Round(Log((double)pow, 2));
-            while (i > 0)
+            i = (int)Round(Log((double)pow, 2));
+            while (i >= 0)
             {
-                res *= res;
-                if ('0' == pow_bin[(int)i - 1])
+                res = mul(res, res, mod);
+                if (i < pow_bin_len && '1' == pow_bin[i])
                 {
-                    for (t = 2; t <= w && t < i; t++)
+                    if (0 < i && '0' == pow_bin[i - 1])
                     {
-                        if ('0' != pow_bin[(int)i - t])
-                            break;
+                        t = 2;
+                        while (t <= w
+                            && t < i
+                            && '0' == pow_bin[i - t])
+                        {
+                            t++;
+                        }
+                        res = (BigInteger)Pow((double)res, (double)TwoPow(t - 1));
+                        res = mul(res, table[t - 1], mod);
+                        i -= t;
                     }
-                    res *= (BigInteger)Pow(2, t - 1);
-                    //res += table[t - 1];
-                    res *= table[t - 1];
-                    i -= t;
+                    else
+                    {
+                        res = mul(res, found, mod);
+                        --i;
+                    }
                 }
                 else
-                    res *= found;
-                i--;
+                    --i;
             }
-            return res;
+                                    return res;
         }
 
         public static BigInteger WindowLRMod2(BigInteger found, BigInteger pow, BigInteger mod, int w, out double table_time, Inverse inv, Multiply mul)
         {
-            long i;
+            int i;
             int t;
             Stopwatch stw;
             BigInteger res;
@@ -445,21 +459,21 @@ namespace DigitsPower
             stw.Stop();
             table_time = stw.Elapsed.TotalMilliseconds;
 
-            pow_bin = ConvToBinary(pow);
-            res = 0;
-            i = (long)(Log((double)pow, 2));
+            pow_bin = Reverse(ConvToBinary(pow));
+            res = 1;
+            i = (int)(Log((double)pow, 2));
             while (i > 0)
             {
-                res *= 2;
-                if ('1' == pow_bin[(int)i])
+                res *= res;
+                if ('1' == pow_bin[i])
                 {
                     for (t = 2; t <= w && t < i; t++)
                     {
-                        if ('1' != pow_bin[(int)i - t])
+                        if ('1' != pow_bin[i - t])
                             break;
                     }
-                    res *= (BigInteger)Pow(2, t - 1);
-                    res += table[t];
+                    res *= TwoPow(t - 1);
+                    res *= table[t - 1];
                     i -= t - 1;
                 }
                 i--;
@@ -1231,47 +1245,6 @@ namespace DigitsPower
 
             return false;
         }
-
-        //public static bool Ferma(BigInteger x)
-        //{
-        //    if (x == 2)
-        //        return true;
-        //    BigInteger tmp = x - BigInteger.Parse("2");
-        //    //Random r = new Random(DateTime.Now.Millisecond);
-        //    for (int i = 0; i < 100; i++)
-        //    {
-        //        BigInteger a = GenFunctions.random_max(x - BigInteger.Parse("2")) + 2;
-        //        if (BigInteger.GreatestCommonDivisor(a, x) != 1)
-        //            return false;
-        //        if (pows(a, x - 1, x) != 1)
-        //            return false;
-        //    }
-        //    return true;
-        //}
-
-        //public static BigInteger mul(BigInteger a, BigInteger b, BigInteger m)
-        //{
-        //    if (b == 1)
-        //        return a;
-        //    if (b % 2 == 0)
-        //    {
-        //        BigInteger t = mul(a, b / 2, m);
-        //        return (2 * t) % m;
-        //    }
-        //    return (mul(a, b - 1, m) + a) % m;
-        //}
-
-        //public static BigInteger pows(BigInteger a, BigInteger b, BigInteger m)
-        //{
-        //    if (b == 0)
-        //        return 1;
-        //    if (b % 2 == 0)
-        //    {
-        //        BigInteger t = pows(a, b / 2, m);
-        //        return mul(t, t, m) % m;
-        //    }
-        //    return (mul(pows(a, b - 1, m), a, m)) % m;
-        //}
     }
 
 }

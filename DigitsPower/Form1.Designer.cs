@@ -695,7 +695,9 @@
             "20.1 DBNS 1.1 LR  (only for prime mod)",
             "20.2 DBNS 1.2 LR  (only for prime mod)",
             "21.DBNS 2 RL",
-            "22.DBNS 2 LR"});
+            "22.DBNS 2 LR",
+            "23.Bonus 1",
+            "24.Bonus 2"});
             this.OperCheckList.Location = new System.Drawing.Point(6, 17);
             this.OperCheckList.Name = "OperCheckList";
             this.OperCheckList.Size = new System.Drawing.Size(235, 124);

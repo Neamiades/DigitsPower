@@ -17,20 +17,17 @@ namespace DigitsPower
         public string Mod { get; set; }
         public string Choice { get; set; }
 
-        //static object locker = new object();
-        public BinaryPow(string found, string degree, string mod, string by, Inverse inv, Multiply mul)
+        public BinaryPow(string found, string degree, string mod, string by)
         {
             Found = found;
             Degree = degree;
             Mod = mod;
             Choice = by;
-            InvMethod = inv;
-            MultMethod = mul;
         }
 
         public abstract string Name();
 
-        protected abstract void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod, Inverse inv, Multiply mul);
+        protected abstract void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod);
 
         protected int[] MakeDigits(string[] mas)
         {
@@ -154,7 +151,7 @@ namespace DigitsPower
                                 while ((mod = srm.ReadLine()) != null)
                                 {
                                     stw.Start();
-                                    LoopFunc(BigInteger.Parse(found), BigInteger.Parse(degree), BigInteger.Parse(mod), InvMethod, MultMethod);
+                                    LoopFunc(BigInteger.Parse(found), BigInteger.Parse(degree), BigInteger.Parse(mod));
                                     stw.Stop();
 
                                     m_sum +=  stw.Elapsed.TotalMilliseconds;
@@ -177,30 +174,25 @@ namespace DigitsPower
 
     abstract class BinaryPowUp
     {
-        public Inverse InvMethod { get; set; }
-        public Multiply MultMethod { get; set; }
-
         public string Found { get; set; }
         public string Degree { get; set; }
         public string Mod { get; set; }
         public string[] Choice { get; set; }
         List<int> aMax, bMax;
 
-        public BinaryPowUp(string found, string degree, string mod, string by, Inverse inv, Multiply mul, string a_max, string b_max)
+        public BinaryPowUp(string found, string degree, string mod, string by, string a_max, string b_max)
         {
             Found = found;
             Degree = degree;
             Mod = mod;
             Choice = by.Split(' ');
-            InvMethod = inv;
-            MultMethod = mul;
             aMax = GenFunctions.ReadString(a_max);
             bMax = GenFunctions.ReadString(b_max);
         }
 
         public abstract string Name();
 
-        protected abstract void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod, Inverse inv, Multiply mul, params BigInteger[] list);
+        protected abstract void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod, params BigInteger[] list);
 
         protected int[] MakeDigits(string[] mas)
         {
@@ -942,7 +934,7 @@ namespace DigitsPower
                                 while ((mod = srm.ReadLine()) != null)
                                 {
                                     stw.Start();
-                                    LoopFunc(BigInteger.Parse(found), BigInteger.Parse(degree), BigInteger.Parse(mod), InvMethod, MultMethod, amax, bmax);
+                                    LoopFunc(BigInteger.Parse(found), BigInteger.Parse(degree), BigInteger.Parse(mod), amax, bmax);
                                     stw.Stop();
 
                                     m_sum += stw.Elapsed.TotalMilliseconds;
@@ -966,114 +958,129 @@ namespace DigitsPower
 
 
     #region Binary
+    class Bonus1 : BinaryPow
+    {
+        public Bonus1(string found, string degree, string mod, string by) : base(found, degree, mod, by) { }
+
+        public override string Name() { return "Bonus 1"; }
+        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod) { PowFunctions.Bonus1(found, pow, mod); }
+    }
+    class Bonus2 : BinaryPow
+    {
+        public Bonus2(string found, string degree, string mod, string by) : base(found, degree, mod, by) { }
+
+        public override string Name() { return "Bonus 2"; }
+        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod) { PowFunctions.Bonus2(found, pow, mod); }
+    }
+
     class BinaryRL : BinaryPow
     {
-        public BinaryRL(string found, string degree, string mod, string by, Inverse inv, Multiply mul) : base(found, degree, mod, by, inv, mul){ }
+        public BinaryRL(string found, string degree, string mod, string by) : base(found, degree, mod, by){ }
         
         public override string Name() { return "BinaryRL"; }
-        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod, Inverse inv, Multiply mul) { PowFunctions.BinaryRL(found, pow, mod, inv, mul); }
+        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod) { PowFunctions.BinaryRL(found, pow, mod); }
     }
     class BinaryLR : BinaryPow
     {
-        public BinaryLR(string found, string degree, string mod, string by, Inverse inv, Multiply mul) : base(found, degree, mod, by, inv, mul) { }
+        public BinaryLR(string found, string degree, string mod, string by) : base(found, degree, mod, by) { }
 
         public override string Name() { return "BinaryLR"; }
-        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod, Inverse inv, Multiply mul) { PowFunctions.BinaryLR(found, pow, mod, inv, mul); }
+        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod) { PowFunctions.BinaryLR(found, pow, mod); }
     }
     class NAFBinaryRL : BinaryPow
     {
-        public NAFBinaryRL(string found, string degree, string mod, string by, Inverse inv, Multiply mul) : base(found, degree, mod, by, inv, mul){ }
+        public NAFBinaryRL(string found, string degree, string mod, string by) : base(found, degree, mod, by){ }
 
         public override string Name() { return "NAFBinaryRL"; }
-        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod, Inverse inv, Multiply mul) { PowFunctions.NAFBinaryRL(found, pow, mod, inv, mul); }
+        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod) { PowFunctions.NAFBinaryRL(found, pow, mod); }
     }
     class NAFBinaryLR : BinaryPow
     {
-        public NAFBinaryLR(string found, string degree, string mod, string by, Inverse inv, Multiply mul) : base(found, degree, mod, by, inv, mul){ }
+        public NAFBinaryLR(string found, string degree, string mod, string by) : base(found, degree, mod, by){ }
 
         public override string Name() { return "NAFBinaryLR"; }
-        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod, Inverse inv, Multiply mul) { PowFunctions.NAFBinaryLR(found, pow, mod, inv, mul); }
+        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod) { PowFunctions.NAFBinaryLR(found, pow, mod); }
     }
     class AddSubRL : BinaryPow
     {
-        public AddSubRL(string found, string degree, string mod, string by, Inverse inv, Multiply mul) : base(found, degree, mod, by, inv, mul){ }
+        public AddSubRL(string found, string degree, string mod, string by) : base(found, degree, mod, by){ }
 
         public override string Name() { return "AddSubRL"; }
-        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod, Inverse inv, Multiply mul) { PowFunctions.AddSubRL(found, pow, mod, inv, mul); }
+        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod) { PowFunctions.AddSubRL(found, pow, mod); }
     }
     class AddSubLR : BinaryPow
     {
-        public AddSubLR(string found, string degree, string mod, string by, Inverse inv, Multiply mul) : base(found, degree, mod, by, inv, mul){ }
+        public AddSubLR(string found, string degree, string mod, string by) : base(found, degree, mod, by){ }
 
         public override string Name() { return "AddSubLR"; }
-        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod, Inverse inv, Multiply mul) { PowFunctions.AddSubLR(found, pow, mod, inv, mul); }
+        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod) { PowFunctions.AddSubLR(found, pow, mod); }
     }
     class Joye_double_and_add : BinaryPow
     {
-        public Joye_double_and_add(string found, string degree, string mod, string by, Inverse inv, Multiply mul) : base(found, degree, mod, by, inv, mul){ }
+        public Joye_double_and_add(string found, string degree, string mod, string by) : base(found, degree, mod, by){ }
 
         public override string Name() { return "Joye_double_and_add"; }
-        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod, Inverse inv, Multiply mul) { PowFunctions.Joye_double_and_add(found, pow, mod, inv, mul); }
+        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod) { PowFunctions.Joye_double_and_add(found, pow, mod); }
     }
     class MontgomeryLadder : BinaryPow
     {
-        public MontgomeryLadder(string found, string degree, string mod, string by, Inverse inv, Multiply mul) : base(found, degree, mod, by, inv, mul){ }
+        public MontgomeryLadder(string found, string degree, string mod, string by) : base(found, degree, mod, by){ }
 
         public override string Name() { return "MontgomeryLadder"; }
-        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod, Inverse inv, Multiply mul) { PowFunctions.MontgomeryLadder(found, pow, mod, inv, mul); }
+        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod) { PowFunctions.MontgomeryLadder(found, pow, mod); }
     }
     class DBNS2RL : BinaryPow
     {
-        public DBNS2RL(string found, string degree, string mod, string by, Inverse inv, Multiply mul) : base(found, degree, mod, by, inv, mul){ }
+        public DBNS2RL(string found, string degree, string mod, string by) : base(found, degree, mod, by){ }
 
         public override string Name() { return "DBNS2RL"; }
-        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod, Inverse inv, Multiply mul) { PowFunctions.DBNS2RL(found, pow, mod, inv, mul); }
+        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod) { PowFunctions.DBNS2RL(found, pow, mod); }
     }
     class DBNS2LR : BinaryPow
     {
-        public DBNS2LR(string found, string degree, string mod, string by, Inverse inv, Multiply mul) : base(found, degree, mod, by, inv, mul){ }
+        public DBNS2LR(string found, string degree, string mod, string by) : base(found, degree, mod, by){ }
 
         public override string Name() { return "DBNS2LR"; }
-        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod, Inverse inv, Multiply mul) { PowFunctions.DBNS2LR(found, pow, mod, inv, mul); }
+        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod) { PowFunctions.DBNS2LR(found, pow, mod); }
     }
     class DBNS1RL : BinaryPowUp
     {
         bool convert_method;
 
-        public DBNS1RL(string found, string degree, string mod, string by, Inverse inv, Multiply mul, string a_max, string b_max) : base(found, degree, mod, by, inv, mul, a_max, b_max)
+        public DBNS1RL(string found, string degree, string mod, string by, string a_max, string b_max) : base(found, degree, mod, by, a_max, b_max)
         {
             convert_method = true;
         }
-        public DBNS1RL(string found, string degree, string mod, string by, Inverse inv, Multiply mul, bool choice, string a_max, string b_max) : base(found, degree, mod, by, inv, mul, a_max, b_max)
+        public DBNS1RL(string found, string degree, string mod, string by, bool choice, string a_max, string b_max) : base(found, degree, mod, by, a_max, b_max)
         {
             convert_method = choice;
         }
 
         public override string Name() { return "DBNS1RL"; }
 
-        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod, Inverse inv, Multiply mul, params BigInteger[] list)
+        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod, params BigInteger[] list)
         {
-            PowFunctions.DBNS1RL(found, pow, mod, inv, mul, convert_method, (long)list[0], (long)list[1]);
+            PowFunctions.DBNS1RL(found, pow, mod, convert_method, (long)list[0], (long)list[1]);
         }
     }
     class DBNS1LR : BinaryPowUp
     {
         bool convert_method;
 
-        public DBNS1LR(string found, string degree, string mod, string by, Inverse inv, Multiply mul, string a_max, string b_max) : base(found, degree, mod, by, inv, mul, a_max, b_max)
+        public DBNS1LR(string found, string degree, string mod, string by, string a_max, string b_max) : base(found, degree, mod, by, a_max, b_max)
         {
             convert_method = true;
         }
-        public DBNS1LR(string found, string degree, string mod, string by, Inverse inv, Multiply mul, bool choice, string a_max, string b_max) : base(found, degree, mod, by, inv, mul, a_max, b_max)
+        public DBNS1LR(string found, string degree, string mod, string by, bool choice, string a_max, string b_max) : base(found, degree, mod, by, a_max, b_max)
         {
             convert_method = choice;
         }
 
         public override string Name() { return "DBNS1LR"; }
 
-        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod, Inverse inv, Multiply mul, params BigInteger[] list)
+        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod, params BigInteger[] list)
         {
-            PowFunctions.DBNS1LR(found, pow, mod, inv, mul, convert_method, (long)list[0], (long)list[1]);
+            PowFunctions.DBNS1LR(found, pow, mod, convert_method, (long)list[0], (long)list[1]);
         }
     }
     #endregion
@@ -1090,7 +1097,7 @@ namespace DigitsPower
         public string Window { get; set; }
         public bool Table { get; set; }
 
-        public WindowPow(string found, string degree, string mod, string by, string window, bool table, Inverse inv, Multiply mul)
+        public WindowPow(string found, string degree, string mod, string by, string window, bool table)
         {
             Found = found;
             Degree = degree;
@@ -1098,13 +1105,11 @@ namespace DigitsPower
             Choice = by;
             Window = window;
             Table = table;
-            InvMethod = inv;
-            MultMethod = mul;
         }
 
         public abstract string Name();
 
-        protected abstract void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod, int w, out double TableTime, Inverse inv, Multiply mul);
+        protected abstract void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod, int w, out double TableTime);
 
         private int[] MakeDigits(string[] mas)
         {
@@ -1579,7 +1584,7 @@ namespace DigitsPower
                                 while ((mod = srm.ReadLine()) != null)
                                 {
                                     stw.Start();
-                                    LoopFunc(BigInteger.Parse(found), BigInteger.Parse(degree), BigInteger.Parse(mod), w, out t_t, InvMethod, MultMethod);
+                                    LoopFunc(BigInteger.Parse(found), BigInteger.Parse(degree), BigInteger.Parse(mod), w, out t_t);
                                     stw.Stop();
 
                                     m_sum += stw.Elapsed.TotalMilliseconds;
@@ -1605,83 +1610,83 @@ namespace DigitsPower
     }
     class WindowRL : WindowPow
     {
-        public WindowRL(string found, string degree, string mod, string by, string window, bool table, Inverse inv, Multiply mul) :
-                   base(found, degree, mod, by, window, table, inv, mul) { }
+        public WindowRL(string found, string degree, string mod, string by, string window, bool table) :
+                   base(found, degree, mod, by, window, table) { }
 
         public override string Name() { return "WindowRL"; }
-        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod, int w, out double TableTime, Inverse inv, Multiply mul) { BigInteger e = PowFunctions.WindowRL(found, pow, mod, w, out TableTime, inv, mul); }
+        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod, int w, out double TableTime) { BigInteger e = PowFunctions.WindowRL(found, pow, mod, w, out TableTime); }
     }
     class WindowLR : WindowPow
     {
-        public WindowLR(string found, string degree, string mod, string by, string window, bool table, Inverse inv, Multiply mul) :
-                   base(found, degree, mod, by, window, table, inv, mul) { }
+        public WindowLR(string found, string degree, string mod, string by, string window, bool table) :
+                   base(found, degree, mod, by, window, table) { }
 
         public override string Name() { return "WindowLR"; }
-        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod, int w, out double TableTime, Inverse inv, Multiply mul) { BigInteger e = PowFunctions.WindowLR(found, pow, mod, w, out TableTime, inv, mul); }
+        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod, int w, out double TableTime) { BigInteger e = PowFunctions.WindowLR(found, pow, mod, w, out TableTime); }
     }
     class SlideRL : WindowPow
     {
-        public SlideRL(string found, string degree, string mod, string by, string window, bool table, Inverse inv, Multiply mul) :
-                   base(found, degree, mod, by, window, table, inv, mul) { }
+        public SlideRL(string found, string degree, string mod, string by, string window, bool table) :
+                   base(found, degree, mod, by, window, table) { }
 
         public override string Name() { return "SlideRL"; }
-        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod, int w, out double TableTime, Inverse inv, Multiply mul) { BigInteger e = PowFunctions.SlideRL(found, pow, mod, w, out TableTime, inv, mul); }
+        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod, int w, out double TableTime) { BigInteger e = PowFunctions.SlideRL(found, pow, mod, w, out TableTime); }
     }
     class SlideLR : WindowPow
     {
-        public SlideLR(string found, string degree, string mod, string by, string window, bool table, Inverse inv, Multiply mul) :
-                   base(found, degree, mod, by, window, table, inv, mul) { }
+        public SlideLR(string found, string degree, string mod, string by, string window, bool table) :
+                   base(found, degree, mod, by, window, table) { }
 
         public override string Name() { return "SlideLR"; }
-        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod, int w, out double TableTime, Inverse inv, Multiply mul) { BigInteger e = PowFunctions.SlideLR(found, pow, mod, w, out TableTime, inv, mul); }
+        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod, int w, out double TableTime) { BigInteger e = PowFunctions.SlideLR(found, pow, mod, w, out TableTime); }
     }
     class NAFSlideRL : WindowPow
     {
-        public NAFSlideRL(string found, string degree, string mod, string by, string window, bool table, Inverse inv, Multiply mul) :
-                   base(found, degree, mod, by, window, table, inv, mul) { }
+        public NAFSlideRL(string found, string degree, string mod, string by, string window, bool table) :
+                   base(found, degree, mod, by, window, table) { }
 
         public override string Name() { return "NAFSlideRL"; }
-        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod, int w, out double TableTime, Inverse inv, Multiply mul) { BigInteger e = PowFunctions.NAFSlideRL(found, pow, mod, w, out TableTime, inv, mul); }
+        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod, int w, out double TableTime) { BigInteger e = PowFunctions.NAFSlideRL(found, pow, mod, w, out TableTime); }
     }
     class NAFSlideLR : WindowPow
     {
-        public NAFSlideLR(string found, string degree, string mod, string by, string window, bool table, Inverse inv, Multiply mul) :
-                   base(found, degree, mod, by, window, table, inv, mul) { }
+        public NAFSlideLR(string found, string degree, string mod, string by, string window, bool table) :
+                   base(found, degree, mod, by, window, table) { }
 
         public override string Name() { return "NAFSlideLR"; }
-        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod, int w, out double TableTime, Inverse inv, Multiply mul) { BigInteger e = PowFunctions.NAFSlideLR(found, pow, mod, w, out TableTime, inv, mul); }
+        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod, int w, out double TableTime) { BigInteger e = PowFunctions.NAFSlideLR(found, pow, mod, w, out TableTime); }
     }
     class NAFWindowRL : WindowPow
     {
-        public NAFWindowRL(string found, string degree, string mod, string by, string window, bool table, Inverse inv, Multiply mul) :
-                   base(found, degree, mod, by, window, table, inv, mul) { }
+        public NAFWindowRL(string found, string degree, string mod, string by, string window, bool table) :
+                   base(found, degree, mod, by, window, table) { }
 
         public override string Name() { return "NAFWindowRL"; }
-        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod, int w, out double TableTime, Inverse inv, Multiply mul) { BigInteger e = PowFunctions.NAFWindowRL(found, pow, mod, w, out TableTime, inv, mul); }
+        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod, int w, out double TableTime) { BigInteger e = PowFunctions.NAFWindowRL(found, pow, mod, w, out TableTime); }
     }
     class NAFWindowLR : WindowPow
     {
-        public NAFWindowLR(string found, string degree, string mod, string by, string window, bool table, Inverse inv, Multiply mul) :
-                   base(found, degree, mod, by, window, table, inv, mul) { }
+        public NAFWindowLR(string found, string degree, string mod, string by, string window, bool table) :
+                   base(found, degree, mod, by, window, table) { }
 
         public override string Name() { return "NAFWindowLR"; }
-        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod, int w, out double TableTime, Inverse inv, Multiply mul) { BigInteger e = PowFunctions.NAFWindowLR(found, pow, mod, w, out TableTime, inv, mul); }
+        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod, int w, out double TableTime) { BigInteger e = PowFunctions.NAFWindowLR(found, pow, mod, w, out TableTime); }
     }
     class wNAFSlideRL : WindowPow
     {
-        public wNAFSlideRL(string found, string degree, string mod, string by, string window, bool table, Inverse inv, Multiply mul) :
-                   base(found, degree, mod, by, window, table, inv, mul) { }
+        public wNAFSlideRL(string found, string degree, string mod, string by, string window, bool table) :
+                   base(found, degree, mod, by, window, table) { }
 
         public override string Name() { return "wNAFSlideRL"; }
-        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod, int w, out double TableTime, Inverse inv, Multiply mul) { BigInteger e = PowFunctions.wNAFSlideRL(found, pow, mod, w, out TableTime, inv, mul); }
+        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod, int w, out double TableTime) { BigInteger e = PowFunctions.wNAFSlideRL(found, pow, mod, w, out TableTime); }
     }
     class wNAFSlideLR : WindowPow
     {
-        public wNAFSlideLR(string found, string degree, string mod, string by, string window, bool table, Inverse inv, Multiply mul) :
-                   base(found, degree, mod, by, window, table, inv, mul) { }
+        public wNAFSlideLR(string found, string degree, string mod, string by, string window, bool table) :
+                   base(found, degree, mod, by, window, table) { }
 
         public override string Name() { return "wNAFSlideLR"; }
-        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod, int w, out double TableTime, Inverse inv, Multiply mul) { BigInteger e = PowFunctions.wNAFSlideLR(found, pow, mod, w, out TableTime, inv, mul); }
+        protected override void LoopFunc(BigInteger found, BigInteger pow, BigInteger mod, int w, out double TableTime) { BigInteger e = PowFunctions.wNAFSlideLR(found, pow, mod, w, out TableTime); }
     }
     #endregion
 }

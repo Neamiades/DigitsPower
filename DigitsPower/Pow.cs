@@ -31,7 +31,12 @@ namespace DigitsPower
 
         #region binary
 
-        public static BigInteger BinaryRL(BigInteger found, BigInteger pow, BigInteger mod, Inverse inv, Multiply mul)
+        public static BigInteger mul(BigInteger a, BigInteger b, BigInteger m)
+        {
+            return ((a * b) % m);
+        }
+
+        public static BigInteger BinaryRL(BigInteger found, BigInteger pow, BigInteger mod)
         {
             BigInteger res, t, inverse;
             res = 1;
@@ -52,7 +57,7 @@ namespace DigitsPower
             return res;
         }
 
-        public static BigInteger BinaryLR(BigInteger found, BigInteger pow, BigInteger mod, Inverse inv, Multiply mul)
+        public static BigInteger BinaryLR(BigInteger found, BigInteger pow, BigInteger mod)
         {
             BigInteger res = 1;
             BigInteger t = found;
@@ -66,7 +71,7 @@ namespace DigitsPower
             return res;
         }
         
-        public static BigInteger NAFBinaryRL(BigInteger found, BigInteger pow, BigInteger mod, Inverse inv, Multiply mul)
+        public static BigInteger NAFBinaryRL(BigInteger found, BigInteger pow, BigInteger mod)
         {
             BigInteger res = 1;
             BigInteger c = found;
@@ -74,13 +79,13 @@ namespace DigitsPower
             for (int i = x.Count - 1; i > -1; i--)
             {
                 if (x[i] == 1) res = mul(res, c, mod);
-                else if (x[i] == -1) res = mul(res, inv(mod, c), mod);
+                else if (x[i] == -1) res = mul(res, Euclid_2_1(mod, c), mod);
                 c = mul(c, c, mod);
             }
             return res;
         }
 
-        public static BigInteger NAFBinaryLR(BigInteger found, BigInteger pow, BigInteger mod, Inverse inv, Multiply mul)
+        public static BigInteger NAFBinaryLR(BigInteger found, BigInteger pow, BigInteger mod)
         {
             BigInteger res = 1;
             BigInteger c = found;
@@ -89,12 +94,12 @@ namespace DigitsPower
             {
                 res = mul(res, res, mod);
                 if (x[i] == 1) res = mul(res, c, mod);
-                else if (x[i] == -1) res = mul(res, inv(mod, c), mod);
+                else if (x[i] == -1) res = mul(res, Euclid_2_1(mod, c), mod);
             }
             return res;
         }
 
-        public static BigInteger AddSubRL(BigInteger found, BigInteger pow, BigInteger mod, Inverse inv, Multiply mul)
+        public static BigInteger AddSubRL(BigInteger found, BigInteger pow, BigInteger mod)
         {
             BigInteger res = 1;
             BigInteger c = found;
@@ -106,14 +111,14 @@ namespace DigitsPower
             for (int i = BinaryN.Length - 2; i >= 0; i--)
             {
                 if (BinaryT[i] != '0' && BinaryN[i] == '0') res = mul(res, c, mod);
-                else if (BinaryT[i] == '0' && BinaryN[i] != '0') res = mul(res, inv(mod, c), mod);
+                else if (BinaryT[i] == '0' && BinaryN[i] != '0') res = mul(res, Euclid_2_1(mod, c), mod);
                 c = mul(c, c, mod);
             }
 
             return res;
         }
 
-        public static BigInteger AddSubLR(BigInteger found, BigInteger pow, BigInteger mod, Inverse inv, Multiply mul)
+        public static BigInteger AddSubLR(BigInteger found, BigInteger pow, BigInteger mod)
         {
             BigInteger res = 1;
             BigInteger c = found;
@@ -126,13 +131,13 @@ namespace DigitsPower
             {
                 res = mul(res, res, mod);
                 if (BinaryT[i] != '0' && BinaryN[i] == '0') res = mul(res, c, mod);
-                else if (BinaryT[i] == '0' && BinaryN[i] != '0') res = mul(res, inv(mod, c), mod);
+                else if (BinaryT[i] == '0' && BinaryN[i] != '0') res = mul(res, Euclid_2_1(mod, c), mod);
             }
 
             return res;
         }
 
-        public static BigInteger Joye_double_and_add(BigInteger found, BigInteger pow, BigInteger mod, Inverse inv, Multiply mul)
+        public static BigInteger Joye_double_and_add(BigInteger found, BigInteger pow, BigInteger mod)
         {
             BigInteger res = 1;
             BigInteger t = found;
@@ -154,7 +159,7 @@ namespace DigitsPower
             return res;
         }
 
-        public static BigInteger MontgomeryLadder(BigInteger found, BigInteger pow, BigInteger mod, Inverse inv, Multiply mul)
+        public static BigInteger MontgomeryLadder(BigInteger found, BigInteger pow, BigInteger mod)
         {
             BigInteger res = 1;
             BigInteger t = found;
@@ -176,7 +181,7 @@ namespace DigitsPower
             return res;
         }
 
-        public static BigInteger DBNS1RL(BigInteger found, BigInteger pow, BigInteger mod, Inverse inv, Multiply mul, bool convert_method, long A, long B)
+        public static BigInteger DBNS1RL(BigInteger found, BigInteger pow, BigInteger mod, bool convert_method, long A, long B)
         {
             BigInteger[,] mas_k;
             mas_k = convert_method ? Convert_to_DBNS_1(pow, A, B)
@@ -194,7 +199,7 @@ namespace DigitsPower
                 t = mul(mul(t, t, mod), t, mod);
 
             if (mas_k[lastindex, 0] == -1)
-                res = mul(res, inv(mod, t), mod);
+                res = mul(res, Euclid_2_1(mod, t), mod);
             else if (mas_k[lastindex, 0] == 1)
                 res = mul(res, t, mod);
 
@@ -209,14 +214,14 @@ namespace DigitsPower
                     t = mul(mul(t, t, mod), t, mod);
 
                 if (mas_k[i, 0] == -1)
-                    res = mul(res, inv(mod, t), mod);
+                    res = mul(res, Euclid_2_1(mod, t), mod);
                 else if (mas_k[i, 0] == 1)
                     res = mul(res, t, mod);
             }
             return res;
         }
 
-        public static BigInteger DBNS1LR(BigInteger found, BigInteger pow, BigInteger mod, Inverse inv, Multiply mul, bool convert_method, long A, long B)
+        public static BigInteger DBNS1LR(BigInteger found, BigInteger pow, BigInteger mod, bool convert_method, long A, long B)
         {
             BigInteger[,] mas_k;
 
@@ -227,7 +232,7 @@ namespace DigitsPower
                                    : Convert_to_DBNS_2(pow, A, B);
 
             if (mas_k[0, 0] == -1)
-                res = inv(mod, t);
+                res = Euclid_2_1(mod, t);
             else if (mas_k[0, 0] == 1)
                 res = t;
 
@@ -242,7 +247,7 @@ namespace DigitsPower
                     res = mul(mul(res, res, mod), res, mod);
 
                 if (mas_k[i + 1, 0] < 0)
-                    res = mul(res, inv(mod, t), mod);
+                    res = mul(res, Euclid_2_1(mod, t), mod);
                 else
                     res = mul(res, t, mod);
             }
@@ -255,7 +260,7 @@ namespace DigitsPower
             return res;
         }
 
-        public static BigInteger DBNS2RL(BigInteger found, BigInteger pow, BigInteger mod, Inverse inv, Multiply mul)
+        public static BigInteger DBNS2RL(BigInteger found, BigInteger pow, BigInteger mod)
         {
             List<int[]> mas_k = ToDBNS2RL(pow);
 
@@ -272,12 +277,12 @@ namespace DigitsPower
                 if (mas_k[i][0] == 1)
                     res = mul(res, t, mod);
                 else if (mas_k[i][0] == -1)
-                    res = mul(res, inv(t, mod), mod);
+                    res = mul(res, Euclid_2_1(t, mod), mod);
             }
             return res;
         }
 
-        public static BigInteger DBNS2LR(BigInteger found, BigInteger pow, BigInteger mod, Inverse inv, Multiply mul)
+        public static BigInteger DBNS2LR(BigInteger found, BigInteger pow, BigInteger mod)
         {
             List<int[]> mas_k = ToDBNS2LR(pow);
             BigInteger res = found;
@@ -292,7 +297,7 @@ namespace DigitsPower
                 if (mas_k[i][0] == 1)
                     res = mul(res, found, mod);
                 else if (mas_k[i][0] == -1)
-                    res = mul(res, inv(found, mod), mod);
+                    res = mul(res, Euclid_2_1(found, mod), mod);
             }
             for (int j = 0; j < mas_k[0][1]; j++)
                 res = mul(res, res, mod);
@@ -302,10 +307,8 @@ namespace DigitsPower
         }
 
         #endregion
-        public static BigInteger Bonus1()
+        public static BigInteger Bonus1(BigInteger found, BigInteger pow, BigInteger mod)
         {
-            BigInteger found, pow, mod;
-            found = pow = mod = 0;
             BigInteger res = 1;
             BigInteger t = found;
 
@@ -327,8 +330,8 @@ namespace DigitsPower
             for (int i = Binary.Length - 1; i >= 0; i--)
             {
                 if (Binary[i] == '1')
-                    res = t * res * mod;//Приведення до степеня після кожного кроку
-                t = t * t * mod;
+                    res = t * res % mod;//Приведення до степеня після кожного кроку
+                t = t * t % mod;
             }
             return res;
         }
@@ -343,7 +346,7 @@ namespace DigitsPower
             return table;
         }
 
-        public static BigInteger WindowRL(BigInteger found, BigInteger pow,  BigInteger mod, int w, out double table_time, Inverse inv, Multiply mul)
+        public static BigInteger WindowRL(BigInteger found, BigInteger pow,  BigInteger mod, int w, out double table_time)
         {
             Stopwatch stw = new Stopwatch();
             stw.Start();
@@ -368,7 +371,7 @@ namespace DigitsPower
             return res;
         }
 
-        public static BigInteger WindowLR(BigInteger found, BigInteger pow, BigInteger mod, int w, out double table_time, Inverse inv, Multiply mul)
+        public static BigInteger WindowLR(BigInteger found, BigInteger pow, BigInteger mod, int w, out double table_time)
         {
             Stopwatch stw = new Stopwatch();
             stw.Start();
@@ -391,7 +394,7 @@ namespace DigitsPower
             return res;
         }
 
-        public static BigInteger WindowLRMod1(BigInteger found, BigInteger pow, BigInteger mod, int w, out double table_time, Inverse inv, Multiply mul)
+        public static BigInteger WindowLRMod1(BigInteger found, BigInteger pow, BigInteger mod, int w, out double table_time)
         {
             int i, t, pow_bin_len;
             Stopwatch stw;
@@ -442,7 +445,7 @@ namespace DigitsPower
                                     return res;
         }
 
-        public static BigInteger WindowLRMod2(BigInteger found, BigInteger pow, BigInteger mod, int w, out double table_time, Inverse inv, Multiply mul)
+        public static BigInteger WindowLRMod2(BigInteger found, BigInteger pow, BigInteger mod, int w, out double table_time)
         {
             int i;
             int t;
@@ -481,7 +484,7 @@ namespace DigitsPower
             return res;
         }
 
-        public static BigInteger WindowLRMod3(BigInteger found, BigInteger pow, BigInteger mod, int w, out double table_time, Inverse inv, Multiply mul)
+        public static BigInteger WindowLRMod3(BigInteger found, BigInteger pow, BigInteger mod, int w, out double table_time)
         {
             long i;
             int t;
@@ -530,7 +533,7 @@ namespace DigitsPower
             return res;
         }
 
-        public static BigInteger WindowLRMod(BigInteger found, BigInteger pow, BigInteger mod, int w, out double table_time, Inverse inv, Multiply mul)
+        public static BigInteger WindowLRMod(BigInteger found, BigInteger pow, BigInteger mod, int w, out double table_time)
         {
             long i;
             int t;
@@ -595,12 +598,12 @@ namespace DigitsPower
             return res;
         }
 
-        public static BigInteger SlideRL(BigInteger found, BigInteger pow, BigInteger mod, int w, out double table_time, Inverse inv, Multiply mul)
+        public static BigInteger SlideRL(BigInteger found, BigInteger pow, BigInteger mod, int w, out double table_time)
         {
             Stopwatch stw = new Stopwatch();
             stw.Start();
             BigInteger power = TwoPow(w - 1);
-            var table = SlideRLTable(found, mod, power, w, inv, mul);
+            var table = SlideRLTable(found, mod, power, w);
             
             stw.Stop();
             table_time = stw.Elapsed.TotalMilliseconds;
@@ -642,12 +645,12 @@ namespace DigitsPower
             return res;
         }
 
-        public static BigInteger SlideLR(BigInteger found, BigInteger power, BigInteger mod, int w, out double table_time, Inverse inv, Multiply mul)
+        public static BigInteger SlideLR(BigInteger found, BigInteger power, BigInteger mod, int w, out double table_time)
         {
             Stopwatch stw = new Stopwatch();
             stw.Start();
             BigInteger pow = 2 * (TwoPow(w) - (BigInteger)Pow((-1), w)) / 3 - 1;
-            var table = NAFLRTable(found, mod, pow, w, inv, mul);
+            var table = NAFLRTable(found, mod, pow, w);
             stw.Stop();
 
             table_time = stw.Elapsed.TotalMilliseconds;
@@ -671,14 +674,14 @@ namespace DigitsPower
                 if (max[0] > 0)
                     res = mul(res, table[(bif.Abs(max[0]) / 2)], mod);
                 else if (max[0] < 0)
-                    res = mul(res, inv(mod, table[(bif.Abs(max[0]) / 2)]), mod);
+                    res = mul(res, Euclid_2_1(mod, table[(bif.Abs(max[0]) / 2)]), mod);
 
                 i = i - max[1];
             }
             return res;
         }
         
-        public static BigInteger NAFSlideRL(BigInteger found, BigInteger power, BigInteger mod, int w, out double table_time, Inverse inv, Multiply mul)
+        public static BigInteger NAFSlideRL(BigInteger found, BigInteger power, BigInteger mod, int w, out double table_time)
         {
             BigInteger res = 1;
             MyList<BigInteger> x = power.ToNAF();
@@ -687,7 +690,7 @@ namespace DigitsPower
             stw.Start();
 
             BigInteger pow = 2 * ((int)TwoPow(w) - (int)Pow((-1), w)) / 3 - 1;
-            MyList<BigInteger> table = NAFRLTable(found, mod, pow, w, inv, mul);
+            MyList<BigInteger> table = NAFRLTable(found, mod, pow, w);
 
             stw.Stop();
             table_time = stw.Elapsed.TotalMilliseconds;
@@ -699,7 +702,7 @@ namespace DigitsPower
                 if (max[0] > 0)
                     res = mul(res, table[(bif.Abs(max[0]) / 2)], mod);
                 else if (max[0] < 0)
-                    res = mul(res, inv(mod, table[(bif.Abs(max[0]) / 2)]), mod);
+                    res = mul(res, Euclid_2_1(mod, table[(bif.Abs(max[0]) / 2)]), mod);
 
                 for (int d = 0; d < max[1]; d++)
                     for (int j = 0; j < table.Count; j++)
@@ -710,7 +713,7 @@ namespace DigitsPower
             return res;
         }
 
-        public static BigInteger NAFSlideLR(BigInteger found, BigInteger power, BigInteger mod, int w, out double table_time, Inverse inv, Multiply mul)
+        public static BigInteger NAFSlideLR(BigInteger found, BigInteger power, BigInteger mod, int w, out double table_time)
         {
             BigInteger res = 1;
             MyList<BigInteger> x = power.ToNAF();
@@ -719,7 +722,7 @@ namespace DigitsPower
             stw.Start();
 
             BigInteger pow = 2 * ((int)Pow(2, w) - (int)Pow((-1), w)) / 3 - 1;
-            MyList<BigInteger> table = NAFLRTable(found, mod, pow, w, inv, mul);
+            MyList<BigInteger> table = NAFLRTable(found, mod, pow, w);
 
             stw.Stop();
             table_time = stw.Elapsed.TotalMilliseconds;
@@ -741,14 +744,14 @@ namespace DigitsPower
                 if (max[0] > 0)
                     res = mul(res, table[(bif.Abs(max[0]) / 2)], mod);
                 else if (max[0] < 0)
-                    res = mul(res, inv(mod, table[(bif.Abs(max[0]) / 2)]), mod);
+                    res = mul(res, Euclid_2_1(mod, table[(bif.Abs(max[0]) / 2)]), mod);
 
                 i = i - (int)max[1];
             }
             return res;
         }
 
-        public static BigInteger NAFWindowRL(BigInteger found, BigInteger power, BigInteger mod, int w, out double table_time, Inverse inv, Multiply mul)
+        public static BigInteger NAFWindowRL(BigInteger found, BigInteger power, BigInteger mod, int w, out double table_time)
         {
             BigInteger res = 1;
             MyList<BigInteger> x = ToNAF(power);
@@ -758,7 +761,7 @@ namespace DigitsPower
             Stopwatch stw = new Stopwatch();
             stw.Start();
             for (BigInteger i = 1; i < pow; i += 2)
-                table.Add(BinaryRL(found, i, mod, inv, mul));
+                table.Add(BinaryRL(found, i, mod));
             stw.Stop();
 
             table_time = stw.Elapsed.TotalMilliseconds;
@@ -775,7 +778,7 @@ namespace DigitsPower
             return res;
         }
 
-        public static BigInteger NAFWindowLR(BigInteger found, BigInteger power, BigInteger mod, int w, out double table_time, Inverse inv, Multiply mul)
+        public static BigInteger NAFWindowLR(BigInteger found, BigInteger power, BigInteger mod, int w, out double table_time)
         {
             BigInteger res = 1;
             var x = ToNAF(power);
@@ -785,7 +788,7 @@ namespace DigitsPower
             Stopwatch stw = new Stopwatch();
             stw.Start();
             for (BigInteger i = 1; i < pow; i += 2)
-                table.Add(BinaryLR(found, i, mod, inv, mul));
+                table.Add(BinaryLR(found, i, mod));
             stw.Stop();
 
             table_time = stw.Elapsed.TotalMilliseconds;
@@ -795,12 +798,12 @@ namespace DigitsPower
                 if (x[i] > 0)
                     res = mul(res, table[(x[i] / 2)], mod);
                 else if (x[i] < 0)
-                    res = mul(res, inv(mod, table[(BigInteger)(-x[i] / 2)]), mod);
+                    res = mul(res, Euclid_2_1(mod, table[(BigInteger)(-x[i] / 2)]), mod);
             }
             return res;
         }
         
-        public static BigInteger wNAFSlideRL(BigInteger found, BigInteger power, BigInteger mod, int w, out double table_time, Inverse inv, Multiply mul)
+        public static BigInteger wNAFSlideRL(BigInteger found, BigInteger power, BigInteger mod, int w, out double table_time)
         {
             BigInteger res = 1;
             var x = ToWNAF(power, w);
@@ -811,7 +814,7 @@ namespace DigitsPower
             stw.Start();
 
             for (BigInteger i = 1; i <= pow; i += 2)
-                table.Add(BinaryRL(found, i, mod, inv, mul));
+                table.Add(BinaryRL(found, i, mod));
 
             stw.Stop();
 
@@ -835,7 +838,7 @@ namespace DigitsPower
             return res;
         }
 
-        public static BigInteger wNAFSlideLR(BigInteger found, BigInteger power, BigInteger mod, int w, out double table_time, Inverse inv, Multiply mul)
+        public static BigInteger wNAFSlideLR(BigInteger found, BigInteger power, BigInteger mod, int w, out double table_time)
         {
             BigInteger res = 1;
             var x = ToWNAF(power,w);
@@ -845,7 +848,7 @@ namespace DigitsPower
             Stopwatch stw = new Stopwatch();
             stw.Start();
             for (BigInteger i = 1; i <= pow; i += 2)
-                table.Add(BinaryLR(found, i, mod, inv, mul));
+                table.Add(BinaryLR(found, i, mod));
             stw.Stop();
 
             table_time = stw.Elapsed.TotalMilliseconds;

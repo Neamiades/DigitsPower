@@ -394,7 +394,7 @@ namespace DigitsPower
             int[] one_i = MakeDigits(one);
             int[] two_i = MakeDigits(two);
             int[] three_i = MakeDigits(three);
-            DirectoryInfo amax_di, bmax_di, one_dir, two_dir, three_dir;
+            DirectoryInfo amax_di, one_dir;
             if (!order)
             {
                 var x = aMax;
@@ -444,7 +444,7 @@ namespace DigitsPower
             int[] one_i = MakeDigits(one);
             int[] two_i = MakeDigits(two);
             int[] three_i = MakeDigits(three);
-            DirectoryInfo amax_di, bmax_di, one_dir, two_dir, three_dir;
+            DirectoryInfo one_dir, two_dir;
             if (!order)
             {
                 var x = aMax;
@@ -494,7 +494,7 @@ namespace DigitsPower
             int[] one_i = MakeDigits(one);
             int[] two_i = MakeDigits(two);
             int[] three_i = MakeDigits(three);
-            DirectoryInfo amax_di, bmax_di, one_dir, two_dir, three_dir;
+            DirectoryInfo one_dir, two_dir;
             if (!order)
             {
                 var x = aMax;
@@ -544,7 +544,7 @@ namespace DigitsPower
             int[] one_i = MakeDigits(one);
             int[] two_i = MakeDigits(two);
             int[] three_i = MakeDigits(three);
-            DirectoryInfo amax_di, bmax_di, one_dir, two_dir, three_dir;
+            DirectoryInfo amax_di, one_dir;
             if (!order)
             {
                 var x = aMax;

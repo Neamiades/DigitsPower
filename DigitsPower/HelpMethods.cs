@@ -407,9 +407,9 @@ namespace DigitsPower
             }
             return x;
         }
-        public static List<int[]> ToDBNS2LR(BigInteger pow)
+        public static MyList<int[]> ToDBNS2LR(BigInteger pow)
         {
-            List<int[]> x = new List<int[]>();
+            MyList<int[]> x = new MyList<int[]>();
             x.Add(new int[3]);
             int i = 0;
             BigInteger v = pow;

@@ -47,6 +47,7 @@
             this.NumberText = new System.Windows.Forms.TextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.FilePow = new System.Windows.Forms.TabPage();
+            this.aMontFlag = new System.Windows.Forms.CheckBox();
             this.label24 = new System.Windows.Forms.Label();
             this.groupBox12 = new System.Windows.Forms.GroupBox();
             this.label15 = new System.Windows.Forms.Label();
@@ -228,7 +229,8 @@
             "25.Window LR3",
             "26.Window LR",
             "25.Bonus1",
-            "26.Bonus2"});
+            "26.Bonus2",
+            "27.Simple Multiplication"});
             this.OperationsList.Location = new System.Drawing.Point(5, 19);
             this.OperationsList.Name = "OperationsList";
             this.OperationsList.Size = new System.Drawing.Size(399, 184);
@@ -343,6 +345,7 @@
             // 
             // FilePow
             // 
+            this.FilePow.Controls.Add(this.aMontFlag);
             this.FilePow.Controls.Add(this.label24);
             this.FilePow.Controls.Add(this.groupBox12);
             this.FilePow.Controls.Add(this.groupBox11);
@@ -358,10 +361,20 @@
             this.FilePow.ToolTipText = "Fuuu";
             this.FilePow.UseVisualStyleBackColor = true;
             // 
+            // aMontFlag
+            // 
+            this.aMontFlag.AutoSize = true;
+            this.aMontFlag.Location = new System.Drawing.Point(787, 207);
+            this.aMontFlag.Name = "aMontFlag";
+            this.aMontFlag.Size = new System.Drawing.Size(131, 17);
+            this.aMontFlag.TabIndex = 31;
+            this.aMontFlag.Text = "Montgomery reduction";
+            this.aMontFlag.UseVisualStyleBackColor = true;
+            // 
             // label24
             // 
             this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(681, 208);
+            this.label24.Location = new System.Drawing.Point(669, 208);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(116, 13);
             this.label24.TabIndex = 33;
@@ -610,6 +623,7 @@
             this.TableWith.TabIndex = 25;
             this.TableWith.Text = "Time with table";
             this.TableWith.UseVisualStyleBackColor = true;
+            this.TableWith.CheckedChanged += new System.EventHandler(this.TableWith_CheckedChanged);
             // 
             // Axis1Box
             // 
@@ -697,7 +711,8 @@
             "21.DBNS 2 RL",
             "22.DBNS 2 LR",
             "23.Bonus 1",
-            "24.Bonus 2"});
+            "24.Bonus 2",
+            "25.ModPow"});
             this.OperCheckList.Location = new System.Drawing.Point(6, 17);
             this.OperCheckList.Name = "OperCheckList";
             this.OperCheckList.Size = new System.Drawing.Size(235, 124);
@@ -1342,6 +1357,7 @@
         private System.Windows.Forms.ComboBox binAxis_1;
         private System.Windows.Forms.Label label34;
         private System.Windows.Forms.ComboBox binAxis_3;
+        private System.Windows.Forms.CheckBox aMontFlag;
     }
 }
 

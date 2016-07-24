@@ -626,6 +626,7 @@ namespace DigitsPower
                 if (OperationsList.CheckedIndices[i] == 27) { OperationsResult.Items.Add("ModWindow LR\t: " + (PowFunctions.WindowLRMod(num, pow, mod, window, out table).ToString())); OperationsResult.Update(); }
                 if (OperationsList.CheckedIndices[i] == 28) { OperationsResult.Items.Add("Bonus1\t: " + (PowFunctions.Bonus1(num, pow, mod).ToString())); OperationsResult.Update(); }
                 if (OperationsList.CheckedIndices[i] == 29) { OperationsResult.Items.Add("Bonus2\t: " + (PowFunctions.Bonus2(num, pow, mod).ToString())); OperationsResult.Update(); }
+                if (OperationsList.CheckedIndices[i] == 30) { OperationsResult.Items.Add("SimpleMul\t: " + (PowFunctions.mul(num, pow, mod).ToString())); OperationsResult.Update(); }
                 #endregion
             }
         }

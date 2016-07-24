@@ -212,9 +212,16 @@ namespace DigitsPower
         private void GetResults(object parameters)
         {
             FuncParam p = (parameters as FuncParam);
-            
+            AdditionalParameters.montFlag = aMontFlag.Checked;
+            if(AdditionalParameters.montFlag)
+            {
+                AdditionalParameters.mul = MontgomeryMultDomain;
+                AdditionalParameters.outRes = outMontgomeryDomain;
+                AdditionalParameters.inRes = toMontgomeryDomain;
+            }
             for (int i = 0; i < OperCheckList.CheckedIndices.Count; i++)
             {
+                //DateTime.Now.ToLocalTime().ToString().Replace(':', '-')
                 #region Binary
                 if (OperCheckList.CheckedIndices[i] == 0)  { (new    BinaryRL(p.found, p.degree, p.mod, p.choice)).Create_Result(); continue; }
                 if (OperCheckList.CheckedIndices[i] == 1)  { (new    BinaryLR(p.found, p.degree, p.mod, p.choice)).Create_Result(); continue; }
@@ -232,6 +239,7 @@ namespace DigitsPower
                 if (OperCheckList.CheckedIndices[i] == 23) { (new DBNS2RL(p.found, p.degree, p.mod, p.choice)).Create_Result(); continue; }
                 if (OperCheckList.CheckedIndices[i] == 24) { (new Bonus1(p.found, p.degree, p.mod, p.choice)).Create_Result(); continue; }
                 if (OperCheckList.CheckedIndices[i] == 25) { (new Bonus2(p.found, p.degree, p.mod, p.choice)).Create_Result(); continue; }
+                if (OperCheckList.CheckedIndices[i] == 26) { (new SimpleMul(p.found, p.degree, p.mod, p.choice)).Create_Result(); continue; }
                 #endregion
 
                 #region Window
@@ -326,8 +334,13 @@ namespace DigitsPower
         {
             Process.Start(@"~\bin\Debug\Foudations");
         }
-       
+
         #endregion
+
+        private void TableWith_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 
     public class FuncParam
@@ -349,6 +362,10 @@ namespace DigitsPower
 
         public static string diapA;
         public static string diapB;
+        public static bool montFlag;
+        public static OutRes outRes = (res, mod, inverse) => res; 
+        public static Multiply mul = (x, y, z, inv) => (x * y) % z;
+        public static InRes inRes = (ref BigInteger a, ref BigInteger b, BigInteger m) => 0;
         //public static Inverse inv = PowFunctions.Euclid_2_1;
     }
 }

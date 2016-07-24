@@ -10,7 +10,9 @@ using static DigitsPower.MontgomeryMethods;
 namespace DigitsPower
 {
     public delegate BigInteger Inverse(BigInteger mod, BigInteger found);
-    public delegate BigInteger Multiply(BigInteger a, BigInteger b, BigInteger m);
+    public delegate BigInteger Multiply(BigInteger a, BigInteger b, BigInteger m, BigInteger inv);
+    public delegate BigInteger OutRes(BigInteger res, BigInteger mod, BigInteger inv);
+    public delegate BigInteger InRes(ref BigInteger a, ref BigInteger b, BigInteger m);
 
     public class MyList<T> : List<T>
     {
@@ -37,24 +39,24 @@ namespace DigitsPower
         }
 
         public static BigInteger BinaryRL(BigInteger found, BigInteger pow, BigInteger mod)
-        {
+         {
             BigInteger res, t, inverse;
             int powLen, i;
 
             res = 1;
             t = found;
 
-            inverse = toMontgomeryDomain(ref t, ref res, mod);
+            inverse = AdditionalParameters.inRes(ref t, ref res, mod);
             
             powLen = (int)(Log((double)pow, 2) + 1);
             for (i = 0; i < powLen; ++i)
             {
                 if (1 == ((pow >> i) & 1))
-                    res = MontgomeryMultDomain(t, res, mod, inverse);
-                t = MontgomeryMultDomain(t, t, mod, inverse);
+                    res = AdditionalParameters.mul(t, res, mod, inverse);
+                t = AdditionalParameters.mul(t, t, mod, inverse);
             }
 
-            res = outMontgomeryDomain(res, mod, inverse);
+            res = AdditionalParameters.outRes(res, mod, inverse);
 
             return res;
         }
@@ -65,15 +67,15 @@ namespace DigitsPower
 
             res = 1;
             t = found;
-            inverse = toMontgomeryDomain(ref t, ref res, mod);
+            inverse = AdditionalParameters.inRes(ref t, ref res, mod);
             powLen = (int)(Log((double)pow, 2));
             for (int i = powLen; 0 <= i; i--)
             {
-                res = MontgomeryMultDomain(res, res, mod, inverse);
+                res = AdditionalParameters.mul(res, res, mod, inverse);
                 if (1 == ((pow >> i) & 1))
-                    res = MontgomeryMultDomain(t, res, mod, inverse);
+                    res = AdditionalParameters.mul(t, res, mod, inverse);
             }
-            res = outMontgomeryDomain(res, mod, inverse);
+            res = AdditionalParameters.outRes(res, mod, inverse);
             return res;
         }
         
@@ -85,16 +87,16 @@ namespace DigitsPower
             res = 1;
             c = found;
             x = ToNAF(pow);
-            inverse = toMontgomeryDomain(ref c, ref res, mod);
+            inverse = AdditionalParameters.inRes(ref c, ref res, mod);
             for (int i = x.Count - 1; i > -1; i--)
             {
                 if (x[i] == 1)
-                    res = MontgomeryMultDomain(res, c, mod, inverse);
+                    res = AdditionalParameters.mul(res, c, mod, inverse);
                 else if (x[i] == -1)
-                    res = MontgomeryMultDomain(res, Euclid_2_1(mod, c), mod, inverse);
-                c = MontgomeryMultDomain(c, c, mod, inverse);
+                    res = AdditionalParameters.mul(res, Euclid_2_1(mod, c), mod, inverse);
+                c = AdditionalParameters.mul(c, c, mod, inverse);
             }
-            res = outMontgomeryDomain(res, mod, inverse);
+            res = AdditionalParameters.outRes(res, mod, inverse);
             return res;
         }
 
@@ -106,16 +108,16 @@ namespace DigitsPower
             res = 1;
             c = found;
             x = ToNAF(pow);
-            inverse = toMontgomeryDomain(ref c, ref res, mod);
+            inverse = AdditionalParameters.inRes(ref c, ref res, mod);
             for (int i = 0; i < x.Count; i++)
             {
-                res = MontgomeryMultDomain(res, res, mod, inverse);
+                res = AdditionalParameters.mul(res, res, mod, inverse);
                 if (x[i] == 1)
-                    res = MontgomeryMultDomain(res, c, mod, inverse);
+                    res = AdditionalParameters.mul(res, c, mod, inverse);
                 else if (x[i] == -1)
-                    res = MontgomeryMultDomain(res, Euclid_2_1(mod, c), mod, inverse);
+                    res = AdditionalParameters.mul(res, Euclid_2_1(mod, c), mod, inverse);
             }
-            res = outMontgomeryDomain(res, mod, inverse);
+            res = AdditionalParameters.outRes(res, mod, inverse);
             return res;
         }
 
@@ -171,22 +173,22 @@ namespace DigitsPower
 
             res = 1;
             t = found;
-            inverse = toMontgomeryDomain(ref t, ref res, mod);
+            inverse = AdditionalParameters.inRes(ref t, ref res, mod);
             powLen = (int)(Log((double)pow, 2) + 1);
             for (int i = 0; i < powLen; i++)
             {
                 if (((pow >> i) & 1) == 1)
                 {
-                    res = MontgomeryMultDomain(res, res, mod, inverse);
-                    res = MontgomeryMultDomain(res, t, mod, inverse);
+                    res = AdditionalParameters.mul(res, res, mod, inverse);
+                    res = AdditionalParameters.mul(res, t, mod, inverse);
                 }
                 else
                 {
-                    t = MontgomeryMultDomain(t, t, mod, inverse);
-                    t = MontgomeryMultDomain(res, t, mod, inverse);
+                    t = AdditionalParameters.mul(t, t, mod, inverse);
+                    t = AdditionalParameters.mul(res, t, mod, inverse);
                 }
             }
-            res = outMontgomeryDomain(res, mod, inverse);
+            res = AdditionalParameters.outRes(res, mod, inverse);
             return res;
         }
 
@@ -197,22 +199,22 @@ namespace DigitsPower
 
             res = 1;
             t = found;
-            inverse = toMontgomeryDomain(ref t, ref res, mod);
+            inverse = AdditionalParameters.inRes(ref t, ref res, mod);
             powLen = (int)(Log((double)pow, 2));
             for (int i = powLen; 0 <= i; i--)
             {
                 if (((pow >> i) & 1) == 0)
                 {
-                    t = MontgomeryMultDomain(t, res, mod, inverse);
-                    res = MontgomeryMultDomain(res, res, mod, inverse);
+                    t = AdditionalParameters.mul(t, res, mod, inverse);
+                    res = AdditionalParameters.mul(res, res, mod, inverse);
                 }
                 else
                 {
-                    res = MontgomeryMultDomain(res, t, mod, inverse);
-                    t = MontgomeryMultDomain(t, t, mod, inverse);
+                    res = AdditionalParameters.mul(res, t, mod, inverse);
+                    t = AdditionalParameters.mul(t, t, mod, inverse);
                 }
             }
-            res = outMontgomeryDomain(res, mod, inverse);
+            res = AdditionalParameters.outRes(res, mod, inverse);
             return res;
         }
 
@@ -348,15 +350,15 @@ namespace DigitsPower
 
             res = 1;
             t = found;
-            inverse = toMontgomeryDomain(ref t, ref res, mod);
+            inverse = AdditionalParameters.inRes(ref t, ref res, mod);
             powLen = (int)(Log((double)pow, 2));
             for (int i = powLen; 0 <= i; i--)
             {
-                res = MontgomeryMultDomain(res, res, mod, inverse);
+                res = AdditionalParameters.mul(res, res, mod, inverse);
                 if (1 == ((pow >> i) & 1))
-                    res = MontgomeryMultDomain(t, res, mod, inverse);
+                    res = AdditionalParameters.mul(t, res, mod, inverse);
             }
-            res = outMontgomeryDomain(res, mod, inverse);
+            res = AdditionalParameters.outRes(res, mod, inverse);
             return res;
         }
         public static BigInteger Bonus2(BigInteger found, BigInteger pow, BigInteger mod)
@@ -366,26 +368,26 @@ namespace DigitsPower
 
             res = 1;
             t = found;
-            inverse = toMontgomeryDomain(ref t, ref res, mod);
+            inverse = AdditionalParameters.inRes(ref t, ref res, mod);
             powLen = (int)(Log((double)pow, 2));
             for (int i = powLen; 0 <= i; i--)
             {
-                res = MontgomeryMultDomain(res, res, mod, inverse);
+                res = AdditionalParameters.mul(res, res, mod, inverse);
                 if (1 == ((pow >> i) & 1))
-                    res = MontgomeryMultDomain(t, res, mod, inverse);
+                    res = AdditionalParameters.mul(t, res, mod, inverse);
             }
-            res = outMontgomeryDomain(res, mod, inverse);
+            res = AdditionalParameters.outRes(res, mod, inverse);
             return res;
         }
         #endregion
         #region window
-        private static MyList<BigInteger> Table(BigInteger found, BigInteger pow, int w, BigInteger mod, Multiply mul)
+        private static MyList<BigInteger> Table(BigInteger found, BigInteger pow, int w, BigInteger mod)
         {
             var table = new MyList<BigInteger>();
 
             table.Add(found);
             for (BigInteger i = 0; i < BigInteger.Parse((Pow(2, w) - 2).ToString()); i++)
-                table.Add(mul(table[i], found, mod));//Приведення до степеня після кожного кроку
+                table.Add((table[i] * found) % mod); 
             return table;
         }
 
@@ -393,7 +395,7 @@ namespace DigitsPower
         {
             Stopwatch stw = new Stopwatch();
             stw.Start();
-            MyList<BigInteger> table = Table(found, pow, w, mod, mul);
+            MyList<BigInteger> table = Table(found, pow, w, mod);
             stw.Stop();
 
             table_time = stw.Elapsed.TotalMilliseconds;
@@ -405,7 +407,8 @@ namespace DigitsPower
             for (int i = bins.Count - 1; i > -1; i--)
             {
                 int c = Convert.ToInt32(bins[i], 2);
-                if (c != 0) res = mul(res,  table[c - 1], mod);
+                if (c != 0)
+                    res = mul(res,  table[c - 1], mod);
 
                 for (int k = 0; k < w; k++)
                     for (int j = 0; j < table.Count; j++)
@@ -418,7 +421,7 @@ namespace DigitsPower
         {
             Stopwatch stw = new Stopwatch();
             stw.Start();
-            MyList<BigInteger> table = Table(found, pow, w, mod, mul);
+            MyList<BigInteger> table = Table(found, pow, w, mod);
             stw.Stop();
 
             table_time = stw.Elapsed.TotalMilliseconds;
